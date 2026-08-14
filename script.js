@@ -1,5 +1,5 @@
 const songs=[
-{t:"Uga Hai Suraj Dev",a:"Anuradha Paudwal",c:"Paramparik Geet",v:"REPLACE_ID_1"},
+{t:"Uga Hai Suraj Dev",a:"Anuradha Paudwal",c:"Paramparik Geet",v:"8MzoVsjL4QU"},
 {t:"Rovele Banjhiniya",a:"Akshara Singh",c:"New Chhath Geet",v:"REPLACE_ID_2"},
 {t:"Jode Jode Falwa",a:"Pawan Singh",c:"New Chhath Geet",v:"REPLACE_ID_3"},
 {t:"Chhath Ghate Chali",a:"Khesari Lal Yadav & Antra Singh Priyanka",c:"New Chhath Geet",v:"REPLACE_ID_4"},
