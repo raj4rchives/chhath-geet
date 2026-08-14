@@ -53,13 +53,13 @@ progress.oninput=()=>{
   if(audio.duration) audio.currentTime=(progress.value/100)*audio.duration;
 };
 volume.oninput=()=>audio.volume=volume.value;
-document.getElementById("volumeBtns").onclick=()=>{
+document.getElementById("volumeBtn").onclick=()=>{
   muted=!muted; audio.muted=muted;
   document.getElementById("volumeBtn").textContent=muted?"🔇":"🔊";
 };
-document.getElementById("muteBtn").onclick=()=>{
+document.getElementById("muteBtns").onclick=()=>{
   muted=!muted; audio.muted=muted;
-  document.getElementById("muteBtn").textContent=muted?"🔇":"🔊";
+  document.getElementById("muteBtns").textContent=muted?"🔇":"🔊";
 };
 audio.addEventListener("play",()=>playBtn.textContent="Ⅱ");
 audio.addEventListener("pause",()=>playBtn.textContent="▶");
