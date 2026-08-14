@@ -54,7 +54,6 @@ repeating-radial-gradient(ellipse at 50% 100%,#e6b85c16 0 2px,transparent 3px 16
 .sound-btn:hover {
   background: #090d18;
 }
-}
 .song-plays {
   margin-left: auto;
   flex-shrink: 0;
