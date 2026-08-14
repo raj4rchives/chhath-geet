@@ -53,7 +53,7 @@ progress.oninput=()=>{
   if(audio.duration) audio.currentTime=(progress.value/100)*audio.duration;
 };
 volume.oninput=()=>audio.volume=volume.value;
-document.getElementById("volumeBtn").onclick=()=>{
+document.getElementById("volumeBtns").onclick=()=>{
   muted=!muted; audio.muted=muted;
   document.getElementById("volumeBtn").textContent=muted?"🔇":"🔊";
 };
