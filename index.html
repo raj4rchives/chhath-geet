@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chhath Geet — Songs of Chhathi Maiya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="sun">☀</div>
+      <div>
+        <div class="brand-name">Chhath Geet</div>
+        <div class="tagline">SONGS OF CHHATHI MAIYA</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="pill">◉ HI</button>
+      <button class="icon-btn" id="menuBtn">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="chips">
+          <span class="chip active">☀ Chhath</span>
+          <button class="chip filter active-filter">Morning</button>
+          <button class="chip filter">Evening</button>
+          <button class="chip filter">Night</button>
+        </div>
+
+        <div class="live">🟢 <b id="listeners">23</b> listening now</div>
+
+        <div class="hero-copy">
+          <p class="eyebrow">लोक आस्था • सूर्य उपासना</p>
+          <h1>Chhath Geet</h1>
+          <p class="sub">Chhathi Maiya ke geet, arghya aur Chhath Puja ki pavitra dhun — ek hi jagah.</p>
+        </div>
+
+        <div class="player-card" id="continueCard">
+          <div class="track-icon">▶</div>
+          <div class="track-info">
+            <small>CONTINUE LISTENING</small>
+            <strong id="currentTitle">Chhath Geet</strong>
+          </div>
+          <button class="close" id="closeContinue">×</button>
+        </div>
+
+        <button class="play-main" id="playBtn"><span>▶</span> Play</button>
+      </div>
+    </section>
+
+    <section class="songs">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">YOUR CHHATH PLAYLIST</span>
+          <h2>Popular Geet</h2>
+        </div>
+        <span class="count">3 GEET</span>
+      </div>
+
+      <div class="song-list">
+        <article class="song" data-song="assets/song1.mp3" data-title="Chhath Geet — Morning">
+          <div class="number">01</div><div class="song-art">☀</div>
+          <div class="song-meta"><b>Chhath Geet — Morning</b><span>Morning • Bhakti</span></div>
+          <button class="song-play">▶</button>
+        </article>
+        <article class="song" data-song="assets/song2.mp3" data-title="Kaanch Hi Baans Ke Bahangiya">
+          <div class="number">02</div><div class="song-art">🪔</div>
+          <div class="song-meta"><b>Kaanch Hi Baans Ke Bahangiya</b><span>Evening • Chhath</span></div>
+          <button class="song-play">▶</button>
+        </article>
+        <article class="song" data-song="assets/song3.mp3" data-title="Uga Ho Suruj Dev">
+          <div class="number">03</div><div class="song-art">🌅</div>
+          <div class="song-meta"><b>Uga Ho Suruj Dev</b><span>Morning • Arghya</span></div>
+          <button class="song-play">▶</button>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="mini-player" id="miniPlayer">
+    <div>
+      <small>NOW PLAYING</small>
+      <b id="miniTitle">Chhath Geet</b>
+    </div>
+    <button id="miniPlay">▶</button>
+  </div>
+
+  <audio id="audio"></audio>
+  <script src="script.js"></script>
+</body>
+</html>
