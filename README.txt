@@ -1,13 +1,13 @@
 CHHATH GEET — RAJ SHARMA
+YouTube-based playlist. No MP3 upload required.
 
-1. Upload all files/folders to GitHub.
-2. Keep song1.mp3 inside assets/.
-3. GitHub Pages should use the main branch and /(root).
-4. Open the GitHub Pages URL.
+To add a song:
+1. Open script.js.
+2. Find a song object.
+3. Replace REPLACE_ID_X with the YouTube VIDEO ID.
+Example:
+https://www.youtube.com/watch?v=ABC123
+Video ID = ABC123
 
-IMPORTANT:
-The first song is already included as assets/song1.mp3.
-song2.mp3 and song3.mp3 are only playlist placeholders. Upload your own files with those exact names if you want them playable.
-
-Website credit:
-Designed & developed by Raj Sharma.
+Keep index.html, style.css and script.js in the GitHub Pages root.
+The song plays through YouTube's embedded player on the website.
