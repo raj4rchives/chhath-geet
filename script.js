@@ -85,3 +85,13 @@ document.getElementById("sharePlayer").onclick=share;
 
 loadSong(0,false);
 audio.volume=.85;
+const audio = document.getElementById("audio");
+const album = document.getElementById("album");
+
+audio.addEventListener("play", () => {
+  album.classList.add("playing");
+});
+
+audio.addEventListener("pause", () => {
+  album.classList.remove("playing");
+});
