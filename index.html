@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ff91ad"><link rel="manifest" href="manifest.json">
+<title>370R JEE Tracker</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    <div class="brand"><div class="brand-mark">370R</div><div><h1>JEE Tracker</h1><p>Plan • Focus • Improve</p></div></div>
+    <div class="top-actions"><button class="pill-btn" id="saveBtn">Save</button><button class="pill-btn" id="pdfBtn">PDF</button></div>
+  </header>
+  <div class="backdrop" id="backdrop"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="side-head"><strong>JEE COMMAND CENTER</strong><button id="closeMenu">×</button></div>
+    <nav>
+      <button class="nav-item active" data-page="dashboard">⌂ <span>Dashboard</span></button>
+      <button class="nav-item" data-page="tracker">▣ <span>Study Tracker</span></button>
+      <button class="nav-item" data-page="focus">◷ <span>Focus Timer</span></button>
+      <button class="nav-item" data-page="room">◉ <span>Study Room</span><em>NEW</em></button>
+      <button class="nav-item" data-page="planner">☑ <span>Daily Planner</span></button>
+      <button class="nav-item" data-page="syllabus">☷ <span>Syllabus</span></button>
+      <button class="nav-item" data-page="backlog">◫ <span>Backlog</span></button>
+      <button class="nav-item" data-page="goals">◎ <span>Goals</span></button>
+      <button class="nav-item" data-page="questions">? <span>Question Practice</span></button>
+      <button class="nav-item" data-page="mock">▤ <span>Mock Tests</span></button>
+      <button class="nav-item" data-page="revision">↻ <span>Revision Planner</span></button>
+      <button class="nav-item" data-page="analytics">▥ <span>Analytics</span></button>
+      <button class="nav-item" data-page="stuff">▱ <span>Study Stuff</span></button>
+      <button class="nav-item" data-page="ai">✦ <span>AI Insights</span></button>
+    </nav>
+    <div class="side-note">Data is stored on this device. Export JSON regularly for backup.</div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-title"><div><span class="eyebrow">JEE COMMAND CENTER</span><h2>Dashboard</h2><p>Your study day at a glance.</p></div><div class="today-chip" id="todayChip"></div></div>
+      <div class="hero-grid">
+        <div class="hero-card countdown-card"><span>JEE MAINS COUNTDOWN</span><strong id="countdown">—</strong><small id="examDateLabel">Set your target date</small><input id="examDate" type="date" value="2027-01-24"></div>
+        <div class="hero-card focus-mini"><div class="mini-head"><span>FOCUS TODAY</span><b id="dashFocus">0h 00m</b></div><div class="progress"><i id="focusProgress"></i></div><div class="mini-row"><span>Questions</span><b id="dashQuestions">0</b></div><div class="mini-row"><span>Tasks</span><b id="dashTasks">0 / 0</b></div></div>
+      </div>
+      <div class="stats" id="dashboardStats">
+        <div class="stat"><b id="daysDone">0</b><span>Days with entries</span></div><div class="stat"><b id="lecSum">0</b><span>Total lectures</span></div><div class="stat"><b id="questionSum">0</b><span>Total questions</span></div><div class="stat"><b id="pyqSum">0</b><span>Total PYQs</span></div><div class="stat"><b id="avgQ">0</b><span>Average Q/day</span></div><div class="stat"><b id="qTarget">0%</b><span>Vs 70 Q/day target</span></div>
+      </div>
+      <div class="grid-2"><div class="card"><div class="section-head"><h3>Today's Plan</h3><button class="text-btn" data-page="planner">View all →</button></div><div id="dashTasksList" class="task-list"></div></div><div class="card"><div class="section-head"><h3>Recent Focus</h3><button class="text-btn" data-page="focus">Open timer →</button></div><div id="dashFocusList" class="focus-list"></div></div></div>
+      <div class="card"><div class="section-head"><h3>Subject-wise Questions</h3></div><div class="table-wrap"><table class="summary-table"><thead><tr><th>TYPE</th><th>PHYSICS</th><th>CHEMISTRY</th><th>MATHEMATICS</th><th>TOTAL</th></tr></thead><tbody><tr><td>HW / CLASS ILLU</td><td id="phyWorkSum">0</td><td id="chemWorkSum">0</td><td id="mathWorkSum">0</td><td id="workSum">0</td></tr><tr><td>DPP</td><td id="phyDppSum">0</td><td id="chemDppSum">0</td><td id="mathDppSum">0</td><td id="dppSum">0</td></tr><tr><td>PYQ</td><td id="phyPyqSum">0</td><td id="chemPyqSum">0</td><td id="mathPyqSum">0</td><td id="pyqDetailSum">0</td></tr><tr class="total-row"><td>TOTAL QUESTIONS</td><td id="phyTotal">0</td><td id="chemTotal">0</td><td id="mathTotal">0</td><td id="overallTotal">0</td></tr></tbody></table></div></div>
+    </section>
+
+    <!-- TRACKER -->
+    <section class="page" id="page-tracker"><div class="page-title"><div><span class="eyebrow">CORE LOG</span><h2>Study Tracker</h2><p>Unlimited daily lecture and question log.</p></div></div><div class="card"><div class="settings"><div class="small"><label>Start date</label><input id="startDate" type="date"></div><button class="primary-btn" id="datesBtn">Fill Dates</button><button class="pill-btn" id="addBtn">+ 15 Days</button><button class="pill-btn" id="loadBtn">Load</button><button class="danger-btn" id="clearBtn">Clear</button><span class="badge">Target: 70–80 questions/day</span></div><p class="note">Enter values such as <b>18Q</b> or <b>12/15</b>. They are counted numerically.</p></div><div class="card"><div class="section-head"><h3>Unlimited Study Log</h3><div class="inline-actions"><input id="reportMonth" type="month"><button class="pill-btn" id="monthPdfBtn">Monthly PDF</button><button class="pill-btn" id="jsonExportBtn">Export JSON</button><label class="file-btn">Import JSON<input id="jsonImport" type="file" accept="application/json" hidden></label></div></div><div class="table-wrap"><table id="tracker"><thead><tr><th>DATE</th><th>LEC TOTAL</th><th>PHY HW / CLASS ILLU</th><th>CHEM HW / CLASS ILLU</th><th>MATH HW / CLASS ILLU</th><th>PHY DPP</th><th>CHEM DPP</th><th>MATH DPP</th><th>PHY PYQ</th><th>CHEM PYQ</th><th>MATH PYQ</th></tr></thead><tbody></tbody></table></div></div></section>
+
+    <!-- FOCUS -->
+    <section class="page" id="page-focus"><div class="page-title"><div><span class="eyebrow">DEEP WORK</span><h2>Focus Timer</h2><p>Log lectures, DPP, PYQ and revision sessions automatically.</p></div></div><div class="focus-layout"><div class="card timer-card"><div class="timer-ring"><div><span id="timerStatus">READY</span><strong id="timerDisplay">00:00:00</strong><small id="timerSub">Choose a subject and start.</small></div></div><div class="focus-form"><select id="focusSubject"><option>Physics</option><option>Chemistry</option><option>Mathematics</option></select><select id="focusActivity"><option>Lecture</option><option>DPP</option><option>PYQ</option><option>Revision</option><option>Question Practice</option><option>Mock Test</option></select><input id="focusChapter" placeholder="Chapter / topic"><input id="focusQuestions" type="number" min="0" placeholder="Questions solved"><div class="timer-buttons"><button class="primary-btn" id="focusStart">Start Focus</button><button class="pill-btn" id="focusPause">Pause</button><button class="danger-btn" id="focusFinish">Finish</button></div></div></div><div class="card"><div class="section-head"><h3>Focus History</h3><span class="badge" id="focusTotalBadge">0 min today</span></div><div id="focusHistory" class="focus-history"></div></div></div></section>
+
+    <!-- ROOM -->
+    <section class="page" id="page-room"><div class="page-title"><div><span class="eyebrow">SOCIAL FOCUS</span><h2>Study Room</h2><p>YPT-style room interface. This version syncs across tabs on the same device; cloud multi-device sync needs a backend.</p></div></div><div class="room-grid"><div class="card"><h3>Create / Join Room</h3><input id="roomName" placeholder="Room name e.g. JEE 99% Club"><input id="roomCode" placeholder="Room code (optional)"><input id="roomUser" placeholder="Your name"><div class="room-actions"><button class="primary-btn" id="createRoom">Create Room</button><button class="pill-btn" id="joinRoom">Join Room</button></div><div class="room-code-box" id="roomCodeBox">No room joined</div></div><div class="card room-live"><div class="section-head"><h3 id="roomTitle">Study Room</h3><span class="live-dot">● LIVE</span></div><div class="room-total"><span>Room focus today</span><b id="roomTotal">0h 00m</b></div><div id="roomMembers" class="members"></div></div></div><div class="card"><h3>How it works</h3><div class="feature-grid"><div><b>🟢 Focusing</b><span>Timer currently running.</span></div><div><b>🟡 Break</b><span>Member paused their session.</span></div><div><b>⚪ Offline</b><span>No active session detected.</span></div><div><b>🏆 Ranking</b><span>Sort members by today's focus time.</span></div></div></div></section>
+
+    <!-- PLANNER -->
+    <section class="page" id="page-planner"><div class="page-title"><div><span class="eyebrow">TASK MANAGEMENT</span><h2>Daily Planner</h2><p>Date-wise to-do list inspired by your screenshots.</p></div></div><div class="planner-grid"><div class="card add-task-card"><div class="section-head"><h3>☑ Add task</h3></div><label>Title</label><input id="taskTitle" placeholder="e.g. Finish Rotational Motion DPP"><div class="two-col"><div><label>Subject</label><select id="taskSubject"><option>Physics</option><option>Chemistry</option><option>Mathematics</option><option>Other</option></select></div><div><label>Priority</label><select id="taskPriority"><option>Medium</option><option>High</option><option>Low</option></select></div></div><label>Due date</label><input id="taskDate" type="date"><div class="two-col"><div><label>Repeat</label><select id="taskRepeat"><option>None</option><option>Daily</option><option>Weekly</option></select></div><div><label>Estimated minutes</label><input id="taskMinutes" type="number" min="0" placeholder="60"></div></div><button class="primary-btn full" id="addTaskBtn">＋ Add task</button></div><div class="card"><div class="planner-head"><div><h3>This week</h3><p id="plannerRange"></p></div><input id="plannerDate" type="date"></div><div class="week-stats"><div><span>Pending</span><b id="pendingCount">0</b></div><div><span>Due today</span><b id="dueCount">0</b></div><div><span>Overdue</span><b class="red" id="overdueCount">0</b></div><div><span>Completed</span><b id="completedCount">0</b></div></div><div id="taskList" class="task-list large"></div></div></div></section>
+
+    <!-- PLACEHOLDER MODULES -->
+    <section class="page" id="page-analytics"><div class="page-title"><div><span class="eyebrow">PERFORMANCE</span><h2>Analytics</h2><p>Study time and question trends.</p></div></div><div class="analytics-grid"><div class="card"><h3>7-Day Focus</h3><div id="focusBars" class="bars"></div></div><div class="card"><h3>Activity Mix</h3><div id="activityMix" class="mix-list"></div></div></div></section>
+    <section class="page" id="page-syllabus"><div class="page-title"><div><span class="eyebrow">ROADMAP</span><h2>Syllabus</h2><p>Module ready for chapter-wise progress.</p></div></div><div class="card placeholder"><b>📚 Syllabus workspace</b><span>Add chapter progress, completion %, revision count and priority here.</span></div></section>
+    <section class="page" id="page-backlog"><div class="page-title"><div><span class="eyebrow">CLEAR THE PILE</span><h2>Backlog</h2><p>Turn backlog items into planner tasks.</p></div></div><div class="card placeholder"><b>📂 Backlog workspace</b><span>Backlog items can be linked directly to Daily Planner and Focus sessions.</span></div></section>
+    <section class="page" id="page-goals"><div class="page-title"><div><span class="eyebrow">TARGETS</span><h2>Goals</h2><p>Set daily, weekly and JEE targets.</p></div></div><div class="card placeholder"><b>🎯 Goals workspace</b><span>Next layer: target hours, questions, chapters and milestone tracking.</span></div></section>
+    <section class="page" id="page-questions"><div class="page-title"><div><span class="eyebrow">PRACTICE</span><h2>Question Practice</h2><p>Use Focus Timer for question sessions and save counts automatically.</p></div></div><div class="card placeholder"><b>❓ Question Practice</b><span>PYQ/DPP tracking is already connected to the core Study Tracker.</span></div></section>
+    <section class="page" id="page-mock"><div class="page-title"><div><span class="eyebrow">TESTING</span><h2>Mock Tests</h2><p>Keep mock scores and analysis in one place.</p></div></div><div class="card placeholder"><b>🧪 Mock Test workspace</b><span>Next layer: marks, percentile, accuracy, time and weak chapters.</span></div></section>
+    <section class="page" id="page-revision"><div class="page-title"><div><span class="eyebrow">SPACED REVISION</span><h2>Revision Planner</h2><p>Schedule 1D / 3D / 7D / 15D revisions from completed topics.</p></div></div><div class="card placeholder"><b>↻ Revision workspace</b><span>Connect completed planner tasks to revision dates.</span></div></section>
+    <section class="page" id="page-stuff"><div class="page-title"><div><span class="eyebrow">RESOURCES</span><h2>Study Stuff</h2><p>Keep links, PDFs and resources organised.</p></div></div><div class="card placeholder"><b>📚 Study Stuff</b><span>Add your modules, notes and useful links here.</span></div></section>
+    <section class="page" id="page-ai"><div class="page-title"><div><span class="eyebrow">SMART INSIGHTS</span><h2>AI Insights</h2><p>Data-driven suggestions from your tracker.</p></div></div><div class="card placeholder"><b>✨ AI Insights</b><span>Your focus, tasks and questions can be used to generate personalised study insights when an AI backend is connected.</span></div></section>
+  </main>
+</div>
+<div id="toast" class="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script><script src="script.js"></script>
+</body></html>
