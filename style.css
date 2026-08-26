@@ -695,3 +695,37 @@ body[data-theme="ember"]{--bg:#fff2ec;--panel:#ffffff;--line:#895f50;--text:#503
 @media(min-width:701px){
   .top-btn-icon{margin-right:5px}
 }
+
+
+/* ===== JEE Calendar + To-Do status ===== */
+.calendar-day.before-start,
+[data-calendar-date].before-start {
+  background: #f3f4f6 !important;
+  color: #9ca3af !important;
+  border-color: #e5e7eb !important;
+}
+
+.calendar-day.future,
+[data-calendar-date].future {
+  background: #f8fafc !important;
+  color: #64748b !important;
+}
+
+.calendar-day.completed,
+[data-calendar-date].completed {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  border-color: #22c55e !important;
+}
+
+.calendar-day.pending,
+[data-calendar-date].pending {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+  border-color: #ef4444 !important;
+}
+
+.jee-day-status {
+  margin-left: 5px;
+  font-weight: 800;
+}

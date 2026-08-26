@@ -968,3 +968,140 @@ function initBackup(){
     e.target.value="";
   });
 }
+
+
+/* =========================================================
+   JEE CALENDAR + TODO INTEGRATION — MERGED
+   ========================================================= */
+(function () {
+  "use strict";
+
+  const TODO_KEY = "jeeStudyTodos";
+  const START_KEY = "jeeStudyTrackingStartDate";
+
+  function localDate(date = new Date()) {
+    return [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, "0"),
+      String(date.getDate()).padStart(2, "0")
+    ].join("-");
+  }
+
+  function today() {
+    return localDate();
+  }
+
+  function loadTodos() {
+    try {
+      return JSON.parse(localStorage.getItem(TODO_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  }
+
+  function saveTodos(todos) {
+    localStorage.setItem(TODO_KEY, JSON.stringify(todos));
+    refreshCalendar();
+  }
+
+  function getStartDate() {
+    return localStorage.getItem(START_KEY) || today();
+  }
+
+  function setStartDate(date) {
+    if (!date) return;
+    localStorage.setItem(START_KEY, date);
+    refreshCalendar();
+  }
+
+  function getDayStatus(date) {
+    const start = getStartDate();
+    const now = today();
+    const dayTodos = loadTodos()[date] || [];
+
+    if (date < start) return "before-start";
+    if (date > now) return "future";
+    if (dayTodos.length === 0) return "no-task";
+
+    return dayTodos.every(todo => todo.completed)
+      ? "completed"
+      : "pending";
+  }
+
+  /*
+   * Connects to an existing calendar without replacing it.
+   * Add data-calendar-date="YYYY-MM-DD" to each calendar day.
+   */
+  function refreshCalendar() {
+    document.querySelectorAll("[data-calendar-date]").forEach(day => {
+      const date = day.dataset.calendarDate;
+      if (!date) return;
+
+      day.classList.remove(
+        "before-start",
+        "future",
+        "no-task",
+        "completed",
+        "pending"
+      );
+
+      day.classList.add(getDayStatus(date));
+
+      const oldStatus = day.querySelector(".jee-day-status");
+      if (oldStatus) oldStatus.remove();
+
+      if (getDayStatus(date) === "completed") {
+        const status = document.createElement("span");
+        status.className = "jee-day-status";
+        status.textContent = "✓";
+        day.appendChild(status);
+      }
+    });
+  }
+
+  /*
+   * Start-date input support.
+   * Existing UI can use #startDate, #calendarStartDate,
+   * or data-start-date.
+   */
+  function connectStartDate() {
+    const input =
+      document.querySelector("#startDate") ||
+      document.querySelector("#calendarStartDate") ||
+      document.querySelector("[data-start-date]");
+
+    if (!input || input.dataset.jeeConnected) return;
+
+    input.dataset.jeeConnected = "1";
+    input.value = getStartDate();
+
+    input.addEventListener("change", () => {
+      setStartDate(input.value);
+      document.dispatchEvent(new CustomEvent("jee:calendar-updated"));
+    });
+  }
+
+  window.JEEStudyTracker = {
+    loadTodos,
+    saveTodos,
+    getStartDate,
+    setStartDate,
+    getDayStatus,
+    today,
+    localDate,
+    refreshCalendar
+  };
+
+  function init() {
+    connectStartDate();
+    refreshCalendar();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  document.addEventListener("jee:calendar-updated", refreshCalendar);
+})();
