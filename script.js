@@ -217,7 +217,6 @@ function updateStats() {
   put("phyDppSum", 0); put("chemDppSum", chemDpp); put("mathDppSum", mathDpp); put("dppSum", dpp);
   put("phyPyqSum", phyPyq); put("chemPyqSum", chemPyq); put("mathPyqSum", mathPyq); put("pyqDetailSum", pyq);
   put("phyTotal", phy); put("chemTotal", chem); put("mathTotal", math); put("overallTotal", overall);
-  if (document.getElementById("streakCalendar")) renderStreakCalendar();
 }
 
 // 5. Monthly Reporting Helpers
@@ -572,8 +571,8 @@ function escapeFeatureText(value) {
 function openFeature(name) {
   const overlay = document.getElementById("featureOverlay");
   const title = document.getElementById("featurePageTitle");
-  const views = ["menu","themes","todo","focus","weekly","backup","streak"];
-  const titles = {menu:"Menu",themes:"🎨 Themes",todo:"📝 Daily TODO",focus:"⏱️ Focus Mode",weekly:"📊 Weekly Report",backup:"💾 Backup & Import",streak:"🔥 Streak & Monthly Calendar"};
+  const views = ["menu","themes","todo","focus","weekly","backup"];
+  const titles = {menu:"Menu",themes:"🎨 Themes",todo:"📝 Daily TODO",focus:"⏱️ Focus Mode",weekly:"📊 Weekly Report",backup:"💾 Backup & Import"};
   overlay.hidden = false;
   views.forEach(v => {
     const el = document.getElementById(v + "View");
@@ -584,7 +583,6 @@ function openFeature(name) {
   if (name === "todo") renderTodoList();
   if (name === "focus") renderFocus();
   if (name === "weekly") renderWeeklyReport();
-  if (name === "streak") renderStreakCalendar();
 }
 function closeFeature() {
   const overlay = document.getElementById("featureOverlay");
@@ -607,28 +605,30 @@ function initFeatureMenu() {
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeFeature(); });
 }
 
-/* ---------- 29 themes ---------- */
+/* ---------- 48 themes ---------- */
 const THEMES = [
   "classic","peach","pink","lavender","mint","ocean","rose-dark","forest",
   "sky","sunset","coral","lemon","aqua","teal","indigo","violet","plum",
   "berry","cherry","coffee","sand","slate","midnight","neon","aurora","ember",
-  "grape","ice"
+  "grape","ice","amoled","dracula","tokyo-night","nord-dark","solar-dark",
+  "deep-ocean","cyberpunk","synthwave","matrix","crimson","royal-dark","obsidian",
+  "charcoal","cosmic","toxic","blueberry-dark","cocoa-dark","rosewood","teal-night","gold-night"
 ];
 
 function applyTheme(theme) {
-  if (!THEMES.includes(theme)) theme = "classic";
+  if (!THEMES.includes(theme)) theme = "royal-dark";
   document.body.dataset.theme = theme;
   localStorage.setItem(THEME_KEY, theme);
   updateThemeButtons();
 }
 function updateThemeButtons() {
-  const theme = document.body.dataset.theme || "classic";
+  const theme = document.body.dataset.theme || "royal-dark";
   document.querySelectorAll(".theme-option").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.theme === theme);
   });
 }
 function initThemes() {
-  applyTheme(localStorage.getItem(THEME_KEY) || "classic");
+  applyTheme(localStorage.getItem(THEME_KEY) || "royal-dark");
   document.querySelectorAll(".theme-option").forEach(btn => {
     btn.addEventListener("click", () => applyTheme(btn.dataset.theme));
   });
@@ -881,136 +881,6 @@ function initWeeklyReport(){
   window.addEventListener("resize",()=>{if(!document.getElementById("weeklyView")?.hidden)renderWeeklyReport();});
 }
 
-
-/* ---------- Streak + Monthly Calendar ---------- */
-const DAILY_TARGET = 70;
-const STREAK_MONTH_KEY = "jee370rStreakMonthV1";
-
-function datePlus(dateStr, amount) {
-  const d = new Date(dateStr + "T00:00:00");
-  d.setDate(d.getDate() + amount);
-  return localISODate(d);
-}
-
-function rowQuestionTotal(r) {
-  return ["phyWork","chemWork","mathWork","phyDpp","chemDpp","mathDpp","phyPyq","chemPyq","mathPyq"]
-    .reduce((sum, f) => sum + num(r[f]), 0);
-}
-
-function buildDailyQuestionMap() {
-  const map = {};
-  rowsData().forEach(r => {
-    if (!r.date) return;
-    map[r.date] = (map[r.date] || 0) + rowQuestionTotal(r);
-  });
-  return map;
-}
-
-function isTargetComplete(date, map) {
-  return (map[date] || 0) >= DAILY_TARGET;
-}
-
-function getCalendarMonth() {
-  const saved = localStorage.getItem(STREAK_MONTH_KEY);
-  if (/^\d{4}-\d{2}$/.test(saved || "")) return saved;
-  const report = document.getElementById("reportMonth")?.value;
-  if (/^\d{4}-\d{2}$/.test(report || "")) return report;
-  return localISODate().slice(0, 7);
-}
-
-function setCalendarMonth(key) {
-  if (!/^\d{4}-\d{2}$/.test(key)) return;
-  localStorage.setItem(STREAK_MONTH_KEY, key);
-  const input = document.getElementById("streakMonth");
-  if (input) input.value = key;
-  renderStreakCalendar();
-}
-
-function monthDateRange(key) {
-  const [year, month] = key.split("-").map(Number);
-  const first = new Date(year, month - 1, 1);
-  const last = new Date(year, month, 0);
-  return { year, month, days: last.getDate(), firstWeekday: (first.getDay() + 6) % 7 };
-}
-
-function renderStreakCalendar() {
-  const box = document.getElementById("streakCalendar");
-  if (!box) return;
-  const key = getCalendarMonth();
-  const input = document.getElementById("streakMonth");
-  if (input) input.value = key;
-  const { year, month, days, firstWeekday } = monthDateRange(key);
-  const map = buildDailyQuestionMap();
-  const today = localISODate();
-  const title = new Date(year, month - 1, 1).toLocaleDateString("en-IN", { month:"long", year:"numeric" });
-  put("streakCalendarTitle", title);
-
-  let html = "";
-  for (let i = 0; i < firstWeekday; i++) html += '<div class="calendar-day empty"></div>';
-  let complete = 0, passed = 0;
-  for (let day = 1; day <= days; day++) {
-    const date = `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-    const qs = map[date] || 0;
-    const future = date > today;
-    const done = !future && qs >= DAILY_TARGET;
-    if (!future) passed++;
-    if (done) complete++;
-    const cls = ["calendar-day", future ? "future" : (done ? "complete" : "missed"), date === today ? "today" : ""].filter(Boolean).join(" ");
-    const status = future ? "Upcoming" : done ? "✓ Target done" : "✕ Target missed";
-    html += `<div class="${cls}" title="${date}: ${qs} questions">
-      <div class="calendar-day-number">${day}</div>
-      <div class="calendar-day-qs">${qs}Q</div>
-      <div class="calendar-day-status">${status}</div>
-    </div>`;
-  }
-  box.innerHTML = html;
-  put("monthCompleteDays", complete);
-  put("monthCompletionRate", `${passed ? Math.round((complete / passed) * 100) : 0}%`);
-  updateStreakStats(map, today);
-}
-
-function updateStreakStats(map, today = localISODate()) {
-  // Current streak ends today if today is complete; otherwise it checks yesterday.
-  let cursor = isTargetComplete(today, map) ? today : datePlus(today, -1);
-  let current = 0;
-  while (isTargetComplete(cursor, map)) {
-    current++;
-    cursor = datePlus(cursor, -1);
-    if (current > 5000) break;
-  }
-
-  const dates = Object.keys(map).filter(Boolean).sort();
-  let best = 0, run = 0, previous = null;
-  dates.forEach(date => {
-    if (!isTargetComplete(date, map)) { run = 0; previous = date; return; }
-    if (previous && datePlus(previous, 1) === date) run++;
-    else run = 1;
-    best = Math.max(best, run);
-    previous = date;
-  });
-  best = Math.max(best, current);
-  put("currentStreak", current);
-  put("bestStreak", best);
-}
-
-function initStreakCalendar() {
-  const input = document.getElementById("streakMonth");
-  if (!input) return;
-  input.value = getCalendarMonth();
-  input.addEventListener("change", () => setCalendarMonth(input.value));
-  document.getElementById("streakPrevMonth")?.addEventListener("click", () => {
-    const [y,m] = getCalendarMonth().split("-").map(Number);
-    const d = new Date(y, m - 2, 1);
-    setCalendarMonth(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);
-  });
-  document.getElementById("streakNextMonth")?.addEventListener("click", () => {
-    const [y,m] = getCalendarMonth().split("-").map(Number);
-    const d = new Date(y, m, 1);
-    setCalendarMonth(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);
-  });
-  renderStreakCalendar();
-}
-
 /* ---------- Start ---------- */
 document.addEventListener("DOMContentLoaded",()=>{
   initFeatureMenu();
@@ -1018,7 +888,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   initTodo();
   initFocus();
   initWeeklyReport();
-  initStreakCalendar();
   initBackup();
 });
 
