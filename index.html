@@ -1,277 +1,89 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Webnest — discover websites, connect with developers, customize and launch with confidence.">
-  <title>Webnest — Buy, Customize & Launch Websites</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebRent — Professional Websites on Rent</title>
+  <meta name="description" content="Launch a professional business website with WebRent. Hosting, maintenance and support included.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="announcement">
-    <span class="pulse"></span>
-    <span>Launch your next website faster — <strong>Browse 250+ premium designs</strong></span>
-    <button class="announcement-close" aria-label="Close">×</button>
-  </div>
-
-  <header class="header" id="top">
-    <nav class="nav container">
-      <a class="brand" href="#top" aria-label="Webnest home">
-        <span class="brand-mark"><i></i><i></i><i></i></span>
-        <span>web<span>nest</span></span>
-      </a>
-
-      <div class="nav-links" id="navLinks">
-        <a href="#websites">Websites</a>
-        <a href="#developers">Developers</a>
-        <a href="#how">How it works</a>
-        <a href="#pricing">Pricing</a>
-      </div>
-
-      <div class="nav-actions">
-        <button class="btn btn-ghost login-btn">Log in</button>
-        <button class="btn btn-primary signup-btn">Get started <span>↗</span></button>
-        <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
-      </div>
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href="#home"><span class="brand-mark">W</span><span>WEBRENT</span></a>
+    <button class="menu-btn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="nav">
+      <a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>
+      <a class="login" href="#contact">🔒 Client Login</a>
     </nav>
-  </header>
+  </div>
+</header>
 
-  <main>
-    <section class="hero">
-      <div class="hero-glow glow-one"></div>
-      <div class="hero-glow glow-two"></div>
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <div class="eyebrow"><span>✦</span> THE MODERN WAY TO GET A WEBSITE</div>
-          <h1>Find a website.<br><em>Make it yours.</em><br>Launch it.</h1>
-          <p>Discover beautiful ready-made websites, connect with trusted developers, customize every detail, and launch without the usual hassle.</p>
-          <div class="hero-buttons">
-            <a class="btn btn-primary btn-lg" href="#websites">Explore websites <span>→</span></a>
-            <button class="btn btn-outline btn-lg" id="projectBtn">Tell us what you need</button>
-          </div>
-          <div class="trust-row">
-            <div class="avatar-stack">
-              <span>AR</span><span>SK</span><span>MJ</span><span>PN</span>
-            </div>
-            <div><strong>4.9/5</strong><small>from 1,200+ happy clients</small></div>
-            <div class="trust-divider"></div>
-            <div><strong>250+</strong><small>ready-to-launch designs</small></div>
-          </div>
-        </div>
-
-        <div class="hero-showcase">
-          <div class="floating-card top-card">
-            <span class="mini-icon">✓</span>
-            <div><strong>Developer matched</strong><small>Rohan · 4.9 ★</small></div>
-          </div>
-          <div class="browser">
-            <div class="browser-bar"><span></span><span></span><span></span><div class="browser-url">webnest.app/preview</div></div>
-            <div class="browser-content">
-              <div class="mock-nav"><b>studio.</b><span>Work&nbsp;&nbsp; Services&nbsp;&nbsp; About</span><button>Let's talk</button></div>
-              <div class="mock-hero">
-                <div><small>CREATIVE DIGITAL STUDIO</small><h3>Ideas that<br><i>move people.</i></h3><p>Strategy, design and technology for ambitious brands.</p><button>View our work ↗</button></div>
-                <div class="mock-orb"><div>✦</div></div>
-              </div>
-              <div class="mock-cards"><span>Branding</span><span>Web design</span><span>Development</span></div>
-            </div>
-          </div>
-          <div class="floating-card bottom-card">
-            <div class="check-circle">✓</div>
-            <div><strong>Project protected</strong><small>Secure milestone payment</small></div>
-            <span class="shield">◈</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="logo-strip">
-      <div class="container logo-inner">
-        <span>TRUSTED BY FOUNDERS & TEAMS</span>
-        <div class="logos"><b>vertex</b><b>northstar</b><b>ACME.</b><b>monogram</b><b>orbit</b></div>
-      </div>
-    </section>
-
-    <section class="section" id="websites">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <div class="eyebrow"><span>01</span> WEBSITE MARKETPLACE</div>
-            <h2>Start with a design<br><em>you already love.</em></h2>
-          </div>
-          <a href="#" class="text-link">View all websites →</a>
-        </div>
-
-        <div class="filter-row">
-          <button class="filter active" data-filter="all">All websites</button>
-          <button class="filter" data-filter="business">Business</button>
-          <button class="filter" data-filter="portfolio">Portfolio</button>
-          <button class="filter" data-filter="store">E-commerce</button>
-          <button class="filter" data-filter="saas">SaaS</button>
-          <div class="search-box"><span>⌕</span><input id="searchInput" placeholder="Search websites..."></div>
-        </div>
-
-        <div class="website-grid" id="websiteGrid">
-          <article class="website-card" data-cat="business" data-name="Aster business studio">
-            <div class="site-preview preview-aster"><div class="preview-nav">ASTER <span>Work&nbsp; About&nbsp; Contact</span></div><div class="preview-body"><small>CREATIVE STUDIO</small><h3>Make your<br>mark.</h3><span class="preview-pill">Explore →</span></div></div>
-            <div class="card-info"><div><h3>Aster Studio</h3><p>Creative business website</p></div><strong>₹8,999</strong></div>
-            <div class="card-meta"><span>● 4.9</span><span>⚡ 3–5 days</span><button class="view-btn">View details</button></div>
-          </article>
-
-          <article class="website-card" data-cat="portfolio" data-name="mono portfolio designer">
-            <div class="site-preview preview-mono"><div class="preview-nav">MONO <span>Projects&nbsp; Profile</span></div><div class="preview-body"><small>DESIGNER / DEVELOPER</small><h3>Selected<br><i>work</i></h3><span class="preview-line"></span></div></div>
-            <div class="card-info"><div><h3>Mono Portfolio</h3><p>Minimal personal portfolio</p></div><strong>₹6,499</strong></div>
-            <div class="card-meta"><span>● 4.8</span><span>⚡ 2–4 days</span><button class="view-btn">View details</button></div>
-          </article>
-
-          <article class="website-card" data-cat="store" data-name="nove ecommerce fashion">
-            <div class="site-preview preview-nove"><div class="preview-nav">NŌVE <span>New&nbsp; Shop&nbsp; Journal</span></div><div class="preview-body"><small>SPRING / SUMMER</small><h3>Everyday<br><i>objects.</i></h3><span class="preview-pill dark">Shop collection</span></div></div>
-            <div class="card-info"><div><h3>Nōve Store</h3><p>Premium e-commerce storefront</p></div><strong>₹14,999</strong></div>
-            <div class="card-meta"><span>● 5.0</span><span>⚡ 5–8 days</span><button class="view-btn">View details</button></div>
-          </article>
-
-          <article class="website-card" data-cat="saas" data-name="flow saas startup">
-            <div class="site-preview preview-flow"><div class="preview-nav">flow<span>Pricing&nbsp; Docs&nbsp; Login</span></div><div class="preview-body"><small>WORK BETTER</small><h3>One place<br>for your <i>team.</i></h3><span class="preview-pill">Start free →</span></div></div>
-            <div class="card-info"><div><h3>Flow SaaS</h3><p>Conversion-focused SaaS landing page</p></div><strong>₹11,999</strong></div>
-            <div class="card-meta"><span>● 4.9</span><span>⚡ 3–6 days</span><button class="view-btn">View details</button></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="custom-section" id="how">
-      <div class="container custom-grid">
-        <div class="custom-art">
-          <div class="art-window">
-            <div class="art-top"><span>PROJECT BRIEF</span><span>● LIVE</span></div>
-            <div class="art-row"><span>Website type</span><strong>Restaurant</strong></div>
-            <div class="art-row"><span>Pages</span><strong>Home · Menu · About · Contact</strong></div>
-            <div class="art-row"><span>Style</span><strong>Modern / Warm / Premium</strong></div>
-            <div class="art-row"><span>Budget</span><strong>₹15,000 — ₹25,000</strong></div>
-            <div class="art-message"><span>AI</span><p>We've matched 6 developers who fit your brief.</p></div>
-          </div>
-          <div class="match-badge">✦ Smart matching</div>
-        </div>
-        <div class="custom-copy">
-          <div class="eyebrow"><span>02</span> NEED SOMETHING UNIQUE?</div>
-          <h2>Tell us your idea.<br><em>We'll find the right builder.</em></h2>
-          <p>Don't settle for a template. Share your idea, budget and references. Compare proposals from vetted developers and choose the person you trust.</p>
-          <div class="feature-list">
-            <div><span>01</span><div><b>Describe your project</b><small>Tell us what you're building in a simple form.</small></div></div>
-            <div><span>02</span><div><b>Compare developers</b><small>See portfolios, ratings, price and delivery time.</small></div></div>
-            <div><span>03</span><div><b>Build with confidence</b><small>Chat, approve designs and pay by milestones.</small></div></div>
-          </div>
-          <button class="btn btn-primary btn-lg" id="briefBtn">Post a project <span>↗</span></button>
-        </div>
-      </div>
-    </section>
-
-    <section class="section developer-section" id="developers">
-      <div class="container">
-        <div class="section-head centered">
-          <div>
-            <div class="eyebrow"><span>03</span> VERIFIED DEVELOPERS</div>
-            <h2>Great websites are built<br><em>by great people.</em></h2>
-            <p>Meet developers with real portfolios, transparent pricing and proven client ratings.</p>
-          </div>
-        </div>
-        <div class="developer-grid">
-          <article class="dev-card"><div class="dev-avatar av1">RK</div><div class="dev-info"><h3>Rohan Kumar <span>✓</span></h3><p>Full-stack developer</p><div class="skills"><i>React</i><i>Next.js</i><i>Node</i></div></div><div class="dev-rating">★ 4.9</div><button class="btn btn-outline">View profile</button></article>
-          <article class="dev-card"><div class="dev-avatar av2">AS</div><div class="dev-info"><h3>Ananya Shah <span>✓</span></h3><p>UI/UX + Web designer</p><div class="skills"><i>Figma</i><i>Webflow</i><i>Branding</i></div></div><div class="dev-rating">★ 5.0</div><button class="btn btn-outline">View profile</button></article>
-          <article class="dev-card"><div class="dev-avatar av3">VM</div><div class="dev-info"><h3>Vivek Mehta <span>✓</span></h3><p>E-commerce specialist</p><div class="skills"><i>Shopify</i><i>React</i><i>SEO</i></div></div><div class="dev-rating">★ 4.8</div><button class="btn btn-outline">View profile</button></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="process-section">
-      <div class="container">
-        <div class="section-head centered">
-          <div><div class="eyebrow"><span>04</span> SIMPLE PROCESS</div><h2>From idea to <em>live</em><br>in a few easy steps.</h2></div>
-        </div>
-        <div class="process-grid">
-          <div class="process-card"><span>01</span><div class="process-icon">⌕</div><h3>Explore</h3><p>Browse premium websites and find a style that fits your brand.</p></div>
-          <div class="process-card"><span>02</span><div class="process-icon">♧</div><h3>Connect</h3><p>Talk directly with a developer, share references and agree on scope.</p></div>
-          <div class="process-card"><span>03</span><div class="process-icon">◇</div><h3>Customize</h3><p>Review designs, request changes and track progress in one dashboard.</p></div>
-          <div class="process-card"><span>04</span><div class="process-icon">↗</div><h3>Launch</h3><p>Approve the final build, connect your domain and go live.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="pricing-section" id="pricing">
-      <div class="container">
-        <div class="pricing-banner">
-          <div><div class="eyebrow"><span>TRANSPARENT PRICING</span></div><h2>No surprises.<br><em>Just great websites.</em></h2><p>Buy a ready-made site or hire a developer for a custom build. You always see the price before you commit.</p></div>
-          <div class="price-options">
-            <div><small>READY-MADE</small><strong>From ₹4,999</strong><span>One-time purchase</span></div>
-            <div class="price-divider"></div>
-            <div><small>CUSTOM BUILD</small><strong>From ₹9,999</strong><span>Milestone based</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="reviews section">
-      <div class="container">
-        <div class="section-head centered"><div><div class="eyebrow"><span>05</span> REAL CUSTOMER REVIEWS</div><h2>People are building<br><em>with Webnest.</em></h2></div></div>
-        <div class="review-grid">
-          <article class="review-card"><div class="stars">★★★★★</div><p>“I found a design I loved, messaged the developer and had my business website live in four days. The whole process felt incredibly simple.”</p><div class="reviewer"><span>AM</span><div><b>Aarav Mehta</b><small>Founder, Nomad Coffee</small></div></div></article>
-          <article class="review-card featured"><div class="quote-mark">“</div><div class="stars">★★★★★</div><p>“Finally, a place where I can see the actual work before hiring a developer. The milestone system gave me complete peace of mind.”</p><div class="reviewer"><span>PS</span><div><b>Priya Sharma</b><small>Founder, Bloom Studio</small></div></div></article>
-          <article class="review-card"><div class="stars">★★★★★</div><p>“As a developer, Webnest gives me qualified leads instead of random DMs. Clients understand my portfolio and pricing before we talk.”</p><div class="reviewer"><span>NK</span><div><b>Nikhil Kapoor</b><small>Independent developer</small></div></div></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="faq-section">
-      <div class="container faq-grid">
-        <div><div class="eyebrow"><span>06</span> FAQ</div><h2>Questions?<br><em>We've got answers.</em></h2><p>Everything you need to know before starting your next website project.</p><button class="btn btn-primary">Talk to support ↗</button></div>
-        <div class="faqs">
-          <details open><summary>Can I customize a ready-made website?<span>+</span></summary><p>Yes. Choose a website you like, then tell the developer what you want changed. You can customize colors, pages, content, features and more.</p></details>
-          <details><summary>How do I communicate with the developer?<span>+</span></summary><p>Every project gets a dedicated workspace where you can chat, share files, review designs and keep all project decisions in one place.</p></details>
-          <details><summary>How does protected payment work?<span>+</span></summary><p>For custom projects, payments can be split into milestones. You approve each milestone before the next payment is released.</p></details>
-          <details><summary>What if I don't know which website I need?<span>+</span></summary><p>Use “Tell us what you need” and describe your business, budget and goals. We'll help you narrow down the right option.</p></details>
-        </div>
-      </div>
-    </section>
-
-    <section class="final-cta">
-      <div class="container final-inner">
-        <div class="cta-glow"></div>
-        <div class="eyebrow"><span>READY WHEN YOU ARE</span></div>
-        <h2>Your next website<br>starts <em>here.</em></h2>
-        <p>Browse designs or tell us your idea. We'll help you get from blank page to live website.</p>
-        <div><a class="btn btn-white btn-lg" href="#websites">Browse websites →</a><button class="btn btn-dark-outline btn-lg" id="finalBrief">Post a project</button></div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container footer-top">
-      <div><a class="brand footer-brand" href="#top"><span class="brand-mark"><i></i><i></i><i></i></span><span>web<span>nest</span></span></a><p>The modern marketplace for buying, customizing and building websites.</p></div>
-      <div class="footer-links"><div><b>Marketplace</b><a href="#websites">Websites</a><a href="#developers">Developers</a><a href="#pricing">Pricing</a></div><div><b>Company</b><a href="#">About</a><a href="#">Careers</a><a href="#">Contact</a></div><div><b>Support</b><a href="#how">How it works</a><a href="#">Help center</a><a href="#">Terms</a></div></div>
+<main id="home">
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">WEBSITE RENTAL PLATFORM</div>
+      <h1>Rent a professional website for your <span>business.</span></h1>
+      <p class="hero-copy">Launch your business online without a huge upfront cost. Get a fast, modern website with hosting, maintenance and support included.</p>
+      <div class="actions"><a class="btn primary" href="#pricing">View Plans</a><a class="btn secondary" href="#contact">Get in Touch</a></div>
+      <div class="trust-row"><span>✓ Fast setup</span><span>✓ Managed hosting</span><span>✓ Monthly billing</span></div>
     </div>
-    <div class="container footer-bottom"><span>© 2026 Webnest. All rights reserved.</span><span>Built for founders, creators & businesses.</span></div>
-  </footer>
-
-  <div class="modal" id="briefModal" aria-hidden="true">
-    <div class="modal-backdrop"></div>
-    <div class="modal-box">
-      <button class="modal-close" id="modalClose">×</button>
-      <div class="eyebrow"><span>START A PROJECT</span></div>
-      <h2>Tell us what you're<br><em>building.</em></h2>
-      <p>Share a few details and we'll help match you with the right developer.</p>
-      <form id="briefForm">
-        <label>What do you need?<input required placeholder="e.g. Restaurant website"></label>
-        <div class="form-row"><label>Budget<select><option>₹5k – ₹10k</option><option>₹10k – ₹25k</option><option>₹25k – ₹50k</option><option>₹50k+</option></select></label><label>Timeline<select><option>Under 1 week</option><option>1–2 weeks</option><option>2–4 weeks</option><option>Flexible</option></select></label></div>
-        <label>Tell us more<textarea placeholder="Pages, features, references, style..."></textarea></label>
-        <button class="btn btn-primary btn-lg" type="submit">Find my developers ↗</button>
-      </form>
-      <div class="success-message" id="successMessage">✓ Thanks! Your project brief is ready. We'll match you with developers.</div>
+    <div class="hero-card">
+      <div class="browser-top"><i></i><i></i><i></i><span>yourbusiness.com</span></div>
+      <div class="mock-site"><div class="mock-logo"></div><div class="mock-nav"></div><div class="mock-title"></div><div class="mock-lines"></div><div class="mock-button"></div><div class="mock-boxes"><b></b><b></b><b></b></div></div>
     </div>
   </div>
+</section>
 
-  <div class="toast" id="toast">Coming soon — this demo action is ready to connect to your backend.</div>
-  <script src="script.js"></script>
+<section class="section pricing" id="pricing">
+  <div class="container">
+    <div class="section-head"><div class="eyebrow">SIMPLE MONTHLY PLANS</div><h2>Find your perfect plan</h2><p>Choose the monthly traffic level that fits your business. Upgrade whenever you grow.</p></div>
+    <div class="pricing-picker">
+      <label for="traffic">Estimated monthly visitors / orders</label>
+      <input id="traffic" type="range" min="1000" max="250000" step="1000" value="50000">
+      <div class="range-labels"><span>1K</span><span>250K+</span></div>
+    </div>
+    <div class="price-card">
+      <div><span class="pill" id="planPill">PLAN C</span><h3 id="planName">Growth Website</h3><p class="muted" id="planTraffic">Up to 50,000 visitors / orders</p></div>
+      <div class="price"><span>$</span><strong id="price">35</strong><small>/ month</small></div>
+      <a class="btn primary full" href="#contact">Start Now</a>
+      <p class="cancel">No long-term contract • Cancel anytime</p>
+    </div>
+  </div>
+</section>
+
+<section class="section light" id="features">
+  <div class="container">
+    <div class="section-head"><div class="eyebrow">WHY WEBRENT</div><h2>Everything you need to run your website</h2><p>We handle the technical side so you can focus on your business.</p></div>
+    <div class="features-grid">
+      <article><div class="icon">⚡</div><h3>High Performance</h3><p>Fast, optimized websites designed to provide a smooth experience on mobile and desktop.</p></article>
+      <article><div class="icon">☁</div><h3>Managed Hosting</h3><p>Reliable hosting, SSL and routine maintenance included with your monthly plan.</p></article>
+      <article><div class="icon">🛠</div><h3>Dedicated Support</h3><p>Get help when you need it with ongoing technical support and updates.</p></article>
+      <article><div class="icon">📱</div><h3>Responsive Design</h3><p>Your website adapts beautifully to phones, tablets and computers.</p></article>
+      <article><div class="icon">🔄</div><h3>Easy Upgrades</h3><p>Upgrade your plan or website features as your business grows.</p></article>
+      <article><div class="icon">🔒</div><h3>Secure by Default</h3><p>SSL and sensible security practices help keep your website protected.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="container cta-inner"><div><div class="eyebrow">READY TO LAUNCH?</div><h2>Get your business online today.</h2><p>Tell us what you need and we'll help you choose the right website plan.</p></div><a class="btn primary" href="mailto:hello@webrent.example">Get in Touch →</a></div>
+</section>
+
+<section class="section faq" id="faq">
+  <div class="container narrow"><div class="section-head"><div class="eyebrow">FAQ</div><h2>Common questions</h2></div>
+    <details open><summary>What does the monthly rental include?</summary><p>Your selected plan can include the website, hosting, SSL, maintenance and technical support.</p></details>
+    <details><summary>Can I cancel anytime?</summary><p>Yes. The demo plans are designed around flexible monthly billing with no long-term contract.</p></details>
+    <details><summary>Can you build a custom website?</summary><p>Yes. Custom designs and additional functionality can be quoted separately.</p></details>
+  </div>
+</section>
+</main>
+
+<footer><div class="container footer-inner"><div class="brand"><span class="brand-mark">W</span><span>WEBRENT</span></div><p>© 2026 WebRent. Professional websites, made simple.</p></div></footer>
+<script src="script.js"></script>
 </body>
 </html>
