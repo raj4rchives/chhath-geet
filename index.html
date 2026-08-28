@@ -135,9 +135,20 @@
           <div class="syllabus-stat"><b id="syllabusPercent">0%</b><span>Overall</span></div>
           <div class="syllabus-stat"><b id="syllabusDone">0</b><span>Tasks done</span></div>
           <div class="syllabus-stat"><b id="syllabusLectures">0/0</b><span>Lectures</span></div>
+          <button class="secondary" id="syllabusPdfBtn" type="button">📄 Download Syllabus PDF</button>
           <button class="secondary" id="syllabusResetBtn" type="button">↻ Reset Progress</button>
         </div>
-        <p class="note">Tick each lecture after completing it. Then tick JM, Advanced, MBS, OPP, HW, Module, PYQ, Advanced Problems and R1/R2/R3 revision.</p>
+        <div class="syllabus-builder card">
+          <div class="builder-title">➕ Add Chapter</div>
+          <div class="syllabus-input-grid">
+            <div class="small"><label>Subject</label><select id="syllabusSubjectInput"><option>Physics</option><option>Mathematics</option><option>Physical Chemistry</option></select></div>
+            <div class="small chapter-input"><label>Chapter Name</label><input id="syllabusChapterInput" type="text" maxlength="100" placeholder="e.g. Electrostatics"></div>
+            <div class="small"><label>Total Lectures</label><input id="syllabusLectureInput" type="number" min="1" max="100" placeholder="e.g. 12"></div>
+            <button class="primary" id="syllabusAddBtn" type="button">+ Add Chapter</button>
+          </div>
+          <p class="note">Set the total lectures for each chapter here. Every lecture gets its own tick. All study/revision columns are saved automatically.</p>
+        </div>
+        <p class="note">Format follows your reference: Chapter → Lecture circles → Total Lec → Lec Comp → JM Lec → Adv Lec → MBBS → OPP → HW → Module → PYQ → Adv. Prob → R1 → R2 → R3.</p>
         <div class="syllabus-tabs" id="syllabusTabs">
           <button class="syllabus-tab active" data-subject="Physics">Physics</button>
           <button class="syllabus-tab" data-subject="Mathematics">Mathematics</button>
@@ -145,7 +156,7 @@
         </div>
         <div class="syllabus-table-wrap">
           <table class="syllabus-table">
-            <thead><tr><th>Chapter</th><th>Lectures</th><th>JM</th><th>Adv</th><th>MBS</th><th>OPP</th><th>HW</th><th>Module</th><th>PYQ</th><th>Adv. Prob</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+            <thead><tr><th>#</th><th>Chapter Name</th><th>Lecture Circle Tracker</th><th>Total Lec</th><th>Lec Comp</th><th>JM Lec</th><th>Adv Lec</th><th>MBBS</th><th>OPP</th><th>HW</th><th>Module</th><th>PYQ</th><th>Adv. Prob</th><th>R1</th><th>R2</th><th>R3</th><th></th></tr></thead>
             <tbody id="syllabusBody"></tbody>
           </table>
         </div>

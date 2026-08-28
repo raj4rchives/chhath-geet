@@ -617,3 +617,13 @@ body[data-theme="ember"]{--bg:#fff2ec;--panel:#ffffff;--line:#895f50;--text:#503
 .syllabus-table th:first-child,.syllabus-table td:first-child{position:sticky;left:0;z-index:3;background:var(--panel,#fff)}
 .syllabus-table th:first-child{z-index:4}.syl-chapter{text-align:left!important;min-width:190px;font-weight:800}.syl-chapter small{display:block;font-weight:400;opacity:.6;margin-top:2px}.syl-lectures{max-width:340px;text-align:left!important}.lec-check{display:inline-flex;align-items:center;gap:2px;margin:2px 3px;cursor:pointer;font-size:9px}.lec-check input{margin:0}.syllabus-table input[type=checkbox]{width:14px;height:14px;accent-color:currentColor;cursor:pointer}
 @media(max-width:800px){.syllabus-stat{min-width:80px}.syl-chapter{min-width:150px}.syllabus-table{font-size:10px}}
+.syllabus-builder{margin:10px 0 14px;padding:14px!important}
+.builder-title{font-weight:900;margin-bottom:10px;font-size:15px}
+.syllabus-input-grid{display:grid;grid-template-columns:170px minmax(220px,1fr) 150px auto;gap:10px;align-items:end}
+.syllabus-input-grid .chapter-input input{width:100%}
+.syllabus-table th,.syllabus-table td{white-space:nowrap}
+.syllabus-table th:nth-child(2),.syllabus-table td:nth-child(2){min-width:190px}
+.syllabus-table th:nth-child(3),.syllabus-table td:nth-child(3){min-width:330px}
+.syllabus-table th:nth-child(16),.syllabus-table td:nth-child(16){min-width:38px}
+.syl-delete{border:0;background:transparent;color:#c33;font-weight:900;cursor:pointer;padding:5px}
+@media(max-width:800px){.syllabus-input-grid{grid-template-columns:1fr 1fr}.syllabus-input-grid .chapter-input{grid-column:1/-1}.syllabus-input-grid button{width:100%}}
