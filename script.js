@@ -612,7 +612,7 @@ const THEMES = [
   "berry","cherry","coffee","sand","slate","midnight","neon","aurora","ember",
   "grape","ice","amoled","dracula","tokyo-night","nord-dark","solar-dark",
   "deep-ocean","cyberpunk","synthwave","matrix","crimson","royal-dark","obsidian",
-  "charcoal","cosmic","toxic","blueberry-dark","cocoa-dark","rosewood","teal-night","gold-night","cotton-candy","strawberry-milk","peach-milk","blueberry-milk","lavender-milk","matcha-milk","pistachio","buttercream","vanilla","rose-quartz","baby-blue","baby-pink","baby-yellow","baby-green","baby-purple","powder-blue","periwinkle","lilac","mauve","sage","seafoam","robin-egg","aqua-mist","sky-mist","sunny-cream","apricot","melon","watermelon","bluebell","grape-soda","mint-choco","chai-cream","cocoa-milk","matcha-cream","peony","sakura","midnight-lilac","soft-charcoal"
+  "charcoal","cosmic","toxic","blueberry-dark","cocoa-dark","rosewood","teal-night","gold-night","cotton-candy","strawberry-milk","peach-milk","blueberry-milk","lavender-milk","matcha-milk","pistachio","buttercream","vanilla","rose-quartz","baby-blue","baby-pink","baby-yellow","baby-green","baby-purple","powder-blue","periwinkle","lilac","mauve","sage","seafoam","robin-egg","aqua-mist","sky-mist","sunny-cream","apricot","melon","watermelon","bluebell","grape-soda","mint-choco","chai-cream","cocoa-milk","matcha-cream","peony","sakura","midnight-lilac","soft-charcoal","study-lavender","study-pink","study-blue","study-mint","study-peach","study-yellow","study-purple","study-sky","study-rose","study-cream","study-sage","study-aqua","study-coral","study-lilac","study-periwinkle","study-butter","study-peony","study-mocha","study-ice","study-sakura"
 ];
 
 function applyTheme(theme) {
