@@ -16,8 +16,8 @@
       <div class="sub">Unlimited study log → keep adding days as long as you study → dashboard → export PDF.</div>
     </div>
     <div class="actions">
-      <button class="secondary top-menu-btn" id="topMenuBtn" type="button" onclick="openFeature('menu')"><span class="top-btn-icon">☰</span><span class="top-btn-label">Menu</span></button>
-      <button class="secondary top-theme-btn" id="topThemeBtn" type="button" onclick="openFeature('themes')"><span class="top-btn-icon">🎨</span><span class="top-btn-label">Themes</span></button>
+      <button class="secondary top-theme-btn" id="topThemeBtn" type="button" onclick="openFeature('themes')">🎨 Themes</button>
+      <button class="secondary top-menu-btn" id="topMenuBtn" type="button" onclick="openFeature('menu')">☰ Menu</button>
       <button class="secondary" id="saveBtn">Save</button>
       <button class="secondary" id="loadBtn">Load</button>
       <button class="danger" id="clearBtn">Clear</button>
@@ -68,11 +68,14 @@
         <button class="menu-feature-btn" data-open-feature="weekly">
           <span>📊</span><div><b>Weekly Report</b><small>Questions • Lectures • Focus time chart</small></div>
         </button>
+        <button class="menu-feature-btn" data-open-feature="syllabus">
+          <span>📚</span><div><b>Syllabus Tracker</b><small>Chapter-wise lectures, PYQ, modules, revision & Advanced practice</small></div>
+        </button>
       </div>
 
       <div id="themesView" class="feature-view" hidden>
         <p class="note">Pick any theme. It is saved automatically and does not affect your study data.</p>
-        <div class="theme-grid theme-grid-48" id="themeGrid">
+        <div class="theme-grid theme-grid-29" id="themeGrid">
           <button class="theme-option" data-theme="classic"><span class="theme-dot theme-classic"></span><b>Classic</b></button>
           <button class="theme-option" data-theme="peach"><span class="theme-dot theme-peach"></span><b>Peach</b></button>
           <button class="theme-option" data-theme="pink"><span class="theme-dot theme-pink"></span><b>Bubblegum</b></button>
@@ -101,26 +104,6 @@
           <button class="theme-option" data-theme="ember"><span class="theme-dot theme-ember"></span><b>Ember</b></button>
           <button class="theme-option" data-theme="grape"><span class="theme-dot theme-grape"></span><b>Grape</b></button>
           <button class="theme-option" data-theme="ice"><span class="theme-dot theme-ice"></span><b>Ice</b></button>
-          <button class="theme-option" data-theme="amoled"><span class="theme-dot theme-amoled"></span><b>AMOLED</b></button>
-          <button class="theme-option" data-theme="dracula"><span class="theme-dot theme-dracula"></span><b>Dracula</b></button>
-          <button class="theme-option" data-theme="tokyo-night"><span class="theme-dot theme-tokyo-night"></span><b>Tokyo Night</b></button>
-          <button class="theme-option" data-theme="nord-dark"><span class="theme-dot theme-nord-dark"></span><b>Nord Dark</b></button>
-          <button class="theme-option" data-theme="solar-dark"><span class="theme-dot theme-solar-dark"></span><b>Solar Dark</b></button>
-          <button class="theme-option" data-theme="deep-ocean"><span class="theme-dot theme-deep-ocean"></span><b>Deep Ocean</b></button>
-          <button class="theme-option" data-theme="cyberpunk"><span class="theme-dot theme-cyberpunk"></span><b>Cyberpunk</b></button>
-          <button class="theme-option" data-theme="synthwave"><span class="theme-dot theme-synthwave"></span><b>Synthwave</b></button>
-          <button class="theme-option" data-theme="matrix"><span class="theme-dot theme-matrix"></span><b>Matrix</b></button>
-          <button class="theme-option" data-theme="crimson"><span class="theme-dot theme-crimson"></span><b>Crimson</b></button>
-          <button class="theme-option" data-theme="royal-dark"><span class="theme-dot theme-royal-dark"></span><b>Royal Dark</b></button>
-          <button class="theme-option" data-theme="obsidian"><span class="theme-dot theme-obsidian"></span><b>Obsidian</b></button>
-          <button class="theme-option" data-theme="charcoal"><span class="theme-dot theme-charcoal"></span><b>Charcoal</b></button>
-          <button class="theme-option" data-theme="cosmic"><span class="theme-dot theme-cosmic"></span><b>Cosmic</b></button>
-          <button class="theme-option" data-theme="toxic"><span class="theme-dot theme-toxic"></span><b>Toxic</b></button>
-          <button class="theme-option" data-theme="blueberry-dark"><span class="theme-dot theme-blueberry-dark"></span><b>Blueberry</b></button>
-          <button class="theme-option" data-theme="cocoa-dark"><span class="theme-dot theme-cocoa-dark"></span><b>Cocoa Dark</b></button>
-          <button class="theme-option" data-theme="rosewood"><span class="theme-dot theme-rosewood"></span><b>Rosewood</b></button>
-          <button class="theme-option" data-theme="teal-night"><span class="theme-dot theme-teal-night"></span><b>Teal Night</b></button>
-          <button class="theme-option" data-theme="gold-night"><span class="theme-dot theme-gold-night"></span><b>Gold Night</b></button>
         </div>
       </div>
 
@@ -145,6 +128,27 @@
           <div class="todo-stat"><b id="todoRate">0%</b><span>Completion</span></div>
         </div>
         <div class="todo-list" id="todoList"><div class="todo-empty">No tasks for this date. Add your first task ✨</div></div>
+      </div>
+
+      <div id="syllabusView" class="feature-view" hidden>
+        <div class="syllabus-toolbar">
+          <div class="syllabus-stat"><b id="syllabusPercent">0%</b><span>Overall</span></div>
+          <div class="syllabus-stat"><b id="syllabusDone">0</b><span>Tasks done</span></div>
+          <div class="syllabus-stat"><b id="syllabusLectures">0/0</b><span>Lectures</span></div>
+          <button class="secondary" id="syllabusResetBtn" type="button">↻ Reset Progress</button>
+        </div>
+        <p class="note">Tick each lecture after completing it. Then tick JM, Advanced, MBS, OPP, HW, Module, PYQ, Advanced Problems and R1/R2/R3 revision.</p>
+        <div class="syllabus-tabs" id="syllabusTabs">
+          <button class="syllabus-tab active" data-subject="Physics">Physics</button>
+          <button class="syllabus-tab" data-subject="Mathematics">Mathematics</button>
+          <button class="syllabus-tab" data-subject="Physical Chemistry">Physical Chemistry</button>
+        </div>
+        <div class="syllabus-table-wrap">
+          <table class="syllabus-table">
+            <thead><tr><th>Chapter</th><th>Lectures</th><th>JM</th><th>Adv</th><th>MBS</th><th>OPP</th><th>HW</th><th>Module</th><th>PYQ</th><th>Adv. Prob</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+            <tbody id="syllabusBody"></tbody>
+          </table>
+        </div>
       </div>
 
       <div id="weeklyView" class="feature-view" hidden>

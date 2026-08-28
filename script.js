@@ -571,8 +571,8 @@ function escapeFeatureText(value) {
 function openFeature(name) {
   const overlay = document.getElementById("featureOverlay");
   const title = document.getElementById("featurePageTitle");
-  const views = ["menu","themes","todo","focus","weekly","backup"];
-  const titles = {menu:"Menu",themes:"🎨 Themes",todo:"📝 Daily TODO",focus:"⏱️ Focus Mode",weekly:"📊 Weekly Report",backup:"💾 Backup & Import"};
+  const views = ["menu","themes","todo","focus","weekly","backup","syllabus"];
+  const titles = {menu:"Menu",themes:"🎨 Themes",todo:"📝 Daily TODO",focus:"⏱️ Focus Mode",weekly:"📊 Weekly Report",backup:"💾 Backup & Import",syllabus:"📚 Syllabus Tracker"};
   overlay.hidden = false;
   views.forEach(v => {
     const el = document.getElementById(v + "View");
@@ -583,6 +583,7 @@ function openFeature(name) {
   if (name === "todo") renderTodoList();
   if (name === "focus") renderFocus();
   if (name === "weekly") renderWeeklyReport();
+  if (name === "syllabus") renderSyllabus();
 }
 function closeFeature() {
   const overlay = document.getElementById("featureOverlay");
@@ -605,30 +606,28 @@ function initFeatureMenu() {
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeFeature(); });
 }
 
-/* ---------- 48 themes ---------- */
+/* ---------- 29 themes ---------- */
 const THEMES = [
   "classic","peach","pink","lavender","mint","ocean","rose-dark","forest",
   "sky","sunset","coral","lemon","aqua","teal","indigo","violet","plum",
   "berry","cherry","coffee","sand","slate","midnight","neon","aurora","ember",
-  "grape","ice","amoled","dracula","tokyo-night","nord-dark","solar-dark",
-  "deep-ocean","cyberpunk","synthwave","matrix","crimson","royal-dark","obsidian",
-  "charcoal","cosmic","toxic","blueberry-dark","cocoa-dark","rosewood","teal-night","gold-night"
+  "grape","ice"
 ];
 
 function applyTheme(theme) {
-  if (!THEMES.includes(theme)) theme = "royal-dark";
+  if (!THEMES.includes(theme)) theme = "classic";
   document.body.dataset.theme = theme;
   localStorage.setItem(THEME_KEY, theme);
   updateThemeButtons();
 }
 function updateThemeButtons() {
-  const theme = document.body.dataset.theme || "royal-dark";
+  const theme = document.body.dataset.theme || "classic";
   document.querySelectorAll(".theme-option").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.theme === theme);
   });
 }
 function initThemes() {
-  applyTheme(localStorage.getItem(THEME_KEY) || "royal-dark");
+  applyTheme(localStorage.getItem(THEME_KEY) || "classic");
   document.querySelectorAll(".theme-option").forEach(btn => {
     btn.addEventListener("click", () => applyTheme(btn.dataset.theme));
   });
@@ -881,6 +880,60 @@ function initWeeklyReport(){
   window.addEventListener("resize",()=>{if(!document.getElementById("weeklyView")?.hidden)renderWeeklyReport();});
 }
 
+
+/* ---------- Syllabus Tracker ---------- */
+const SYLLABUS_KEY = "jee370rSyllabusTrackerV1";
+const SYLLABUS = {
+  "Physics": [
+    ["Mathematical Tools",7],["Error in Measurements",4],["Motion in a Straight Line",7],["Motion in a Plane",4],["Relative Motion",4],["Laws of Motion",13],["Work, Energy and Power",6],["Circular Motion",8],["Centre of Mass & System of Particles",11],["Rotational Motion",16],["Oscillations",8],["Ray Optics and Optical Instruments",16],["Dual Nature",3]
+  ],
+  "Mathematics": [
+    ["Basic Mathematics",16],["Quadratic Equations",10],["Sequence and Series",9],["Trigonometric Functions",8],["Trigonometric Equations",4],["Permutations and Combinations",10],["Binomial Theorem",7],["Straight Lines",10],["Circles",9],["Parabola",7]
+  ],
+  "Physical Chemistry": [
+    ["Some Basic Concepts of Chemistry",13],["Redox Reaction",6],["Solutions",9],["Chemical Kinetics",9],["Thermodynamics",12],["Chemical Equilibrium",5],["Ionic Equilibrium",7],["Electrochemistry",9],["Structure of Atom",8]
+  ]
+};
+const SYL_TASKS = ["JM","Adv","MBS","OPP","HW","Module","PYQ","Adv. Prob","R1","R2","R3"];
+function getSyllabus(){ return safeJSON(SYLLABUS_KEY, {}); }
+function saveSyllabus(x){ localStorage.setItem(SYLLABUS_KEY, JSON.stringify(x)); }
+function syllabusChapterKey(subject, i){ return subject + "::" + i; }
+function renderSyllabus(subject){
+  const body=document.getElementById("syllabusBody"); if(!body)return;
+  subject = subject || document.querySelector(".syllabus-tab.active")?.dataset.subject || "Physics";
+  const data=getSyllabus(); body.innerHTML="";
+  let totalLect=0, doneLect=0, totalTasks=0, doneTasks=0;
+  Object.entries(SYLLABUS).forEach(([sub, chapters])=>chapters.forEach(([name, lec], i)=>{
+    const st=data[syllabusChapterKey(sub,i)] || {lectures:[],tasks:{}};
+    totalLect+=lec; doneLect+=(st.lectures||[]).filter(Boolean).length;
+    totalTasks+=SYL_TASKS.length; doneTasks+=SYL_TASKS.filter(t=>st.tasks?.[t]).length;
+  }));
+  const rows=SYLLABUS[subject]||[];
+  rows.forEach(([name, lec], i)=>{
+    const key=syllabusChapterKey(subject,i), st=data[key]||{lectures:[],tasks:{}};
+    const lectureHtml=Array.from({length:lec},(_,n)=>`<label class="lec-check" title="Lecture ${n+1}"><input type="checkbox" data-syl-lecture="${key}" data-lecture="${n}" ${(st.lectures||[])[n]?"checked":""}><span>L${n+1}</span></label>`).join("");
+    const taskHtml=SYL_TASKS.map(t=>`<td><input type="checkbox" data-syl-task="${key}" data-task="${t}" ${st.tasks?.[t]?"checked":""}></td>`).join("");
+    body.insertAdjacentHTML("beforeend",`<tr><td class="syl-chapter">${escapeFeatureText(name)}<small>${lec} lectures</small></td><td class="syl-lectures">${lectureHtml}</td>${taskHtml}</tr>`);
+  });
+  put("syllabusLectures",`${doneLect}/${totalLect}`);
+  put("syllabusDone",doneTasks);
+  put("syllabusPercent",`${Math.round(((doneLect+doneTasks)/(totalLect+totalTasks))*100)}%`);
+  document.querySelectorAll("[data-syl-lecture]").forEach(el=>el.addEventListener("change",()=>{
+    const d=getSyllabus(), k=el.dataset.sylLecture, n=Number(el.dataset.lecture); d[k] ||= {lectures:[],tasks:{}}; d[k].lectures ||= []; d[k].lectures[n]=el.checked; saveSyllabus(d); renderSyllabus(subject);
+  }));
+  document.querySelectorAll("[data-syl-task]").forEach(el=>el.addEventListener("change",()=>{
+    const d=getSyllabus(), k=el.dataset.sylTask, t=el.dataset.task; d[k] ||= {lectures:[],tasks:{}}; d[k].tasks ||= {}; d[k].tasks[t]=el.checked; saveSyllabus(d); renderSyllabus(subject);
+  }));
+}
+function initSyllabus(){
+  document.querySelectorAll(".syllabus-tab").forEach(btn=>btn.addEventListener("click",()=>{
+    document.querySelectorAll(".syllabus-tab").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); renderSyllabus(btn.dataset.subject);
+  }));
+  document.getElementById("syllabusResetBtn")?.addEventListener("click",()=>{
+    if(confirm("Reset all syllabus progress?")){ localStorage.removeItem(SYLLABUS_KEY); renderSyllabus(); }
+  });
+}
+
 /* ---------- Start ---------- */
 document.addEventListener("DOMContentLoaded",()=>{
   initFeatureMenu();
@@ -888,6 +941,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   initTodo();
   initFocus();
   initWeeklyReport();
+  initSyllabus();
   initBackup();
 });
 
@@ -968,140 +1022,3 @@ function initBackup(){
     e.target.value="";
   });
 }
-
-
-/* =========================================================
-   JEE CALENDAR + TODO INTEGRATION — MERGED
-   ========================================================= */
-(function () {
-  "use strict";
-
-  const TODO_KEY = "jeeStudyTodos";
-  const START_KEY = "jeeStudyTrackingStartDate";
-
-  function localDate(date = new Date()) {
-    return [
-      date.getFullYear(),
-      String(date.getMonth() + 1).padStart(2, "0"),
-      String(date.getDate()).padStart(2, "0")
-    ].join("-");
-  }
-
-  function today() {
-    return localDate();
-  }
-
-  function loadTodos() {
-    try {
-      return JSON.parse(localStorage.getItem(TODO_KEY) || "{}");
-    } catch {
-      return {};
-    }
-  }
-
-  function saveTodos(todos) {
-    localStorage.setItem(TODO_KEY, JSON.stringify(todos));
-    refreshCalendar();
-  }
-
-  function getStartDate() {
-    return localStorage.getItem(START_KEY) || today();
-  }
-
-  function setStartDate(date) {
-    if (!date) return;
-    localStorage.setItem(START_KEY, date);
-    refreshCalendar();
-  }
-
-  function getDayStatus(date) {
-    const start = getStartDate();
-    const now = today();
-    const dayTodos = loadTodos()[date] || [];
-
-    if (date < start) return "before-start";
-    if (date > now) return "future";
-    if (dayTodos.length === 0) return "no-task";
-
-    return dayTodos.every(todo => todo.completed)
-      ? "completed"
-      : "pending";
-  }
-
-  /*
-   * Connects to an existing calendar without replacing it.
-   * Add data-calendar-date="YYYY-MM-DD" to each calendar day.
-   */
-  function refreshCalendar() {
-    document.querySelectorAll("[data-calendar-date]").forEach(day => {
-      const date = day.dataset.calendarDate;
-      if (!date) return;
-
-      day.classList.remove(
-        "before-start",
-        "future",
-        "no-task",
-        "completed",
-        "pending"
-      );
-
-      day.classList.add(getDayStatus(date));
-
-      const oldStatus = day.querySelector(".jee-day-status");
-      if (oldStatus) oldStatus.remove();
-
-      if (getDayStatus(date) === "completed") {
-        const status = document.createElement("span");
-        status.className = "jee-day-status";
-        status.textContent = "✓";
-        day.appendChild(status);
-      }
-    });
-  }
-
-  /*
-   * Start-date input support.
-   * Existing UI can use #startDate, #calendarStartDate,
-   * or data-start-date.
-   */
-  function connectStartDate() {
-    const input =
-      document.querySelector("#startDate") ||
-      document.querySelector("#calendarStartDate") ||
-      document.querySelector("[data-start-date]");
-
-    if (!input || input.dataset.jeeConnected) return;
-
-    input.dataset.jeeConnected = "1";
-    input.value = getStartDate();
-
-    input.addEventListener("change", () => {
-      setStartDate(input.value);
-      document.dispatchEvent(new CustomEvent("jee:calendar-updated"));
-    });
-  }
-
-  window.JEEStudyTracker = {
-    loadTodos,
-    saveTodos,
-    getStartDate,
-    setStartDate,
-    getDayStatus,
-    today,
-    localDate,
-    refreshCalendar
-  };
-
-  function init() {
-    connectStartDate();
-    refreshCalendar();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
-
-  document.addEventListener("jee:calendar-updated", refreshCalendar);
-})();
