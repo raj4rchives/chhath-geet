@@ -612,7 +612,7 @@ const THEMES = [
   "berry","cherry","coffee","sand","slate","midnight","neon","aurora","ember",
   "grape","ice","amoled","dracula","tokyo-night","nord-dark","solar-dark",
   "deep-ocean","cyberpunk","synthwave","matrix","crimson","royal-dark","obsidian",
-  "charcoal","cosmic","toxic","blueberry-dark","cocoa-dark","rosewood","teal-night","gold-night"
+  "charcoal","cosmic","toxic","blueberry-dark","cocoa-dark","rosewood","teal-night","gold-night","cotton-candy","strawberry-milk","peach-milk","blueberry-milk","lavender-milk","matcha-milk","pistachio","buttercream","vanilla","rose-quartz","baby-blue","baby-pink","baby-yellow","baby-green","baby-purple","powder-blue","periwinkle","lilac","mauve","sage","seafoam","robin-egg","aqua-mist","sky-mist","sunny-cream","apricot","melon","watermelon","bluebell","grape-soda","mint-choco","chai-cream","cocoa-milk","matcha-cream","peony","sakura","midnight-lilac","soft-charcoal"
 ];
 
 function applyTheme(theme) {
@@ -885,7 +885,7 @@ function initWeeklyReport(){
 const SYLLABUS_KEY = "370R_JEE_SYLLABUS_V3";
 const SYLLABUS_SUBJECTS = ["Physics", "Chemistry", "Mathematics"];
 const SYLLABUS_TASKS = ["jm", "adv", "mbbs", "opp", "hw", "module", "pyq", "advProb", "r1", "r2", "r3"];
-const SYLLABUS_TASK_LABELS = {jm:"JEE Main Ques", adv:"Adv Lec", mbbs:"MBBS", opp:"OPP", hw:"HW", module:"Module", pyq:"PYQ", advProb:"Adv Prob", r1:"R1", r2:"R2", r3:"R3"};
+const SYLLABUS_TASK_LABELS = {jm:"MAINS LEVEL", adv:"ADV LEVEL", mbbs:"SHORT NOTES", opp:"DPP", hw:"HW", module:"MODULE", pyq:"PYQ", advProb:"TEST", r1:"R1", r2:"R2", r3:"R3"};
 
 function syllabusData(){
   try{
@@ -943,83 +943,144 @@ function initSyllabus(){
 }
 function pdfBox(pdf,x,y,size=3.4){ pdf.setDrawColor(80,80,80); pdf.setLineWidth(0.25); pdf.rect(x,y,size,size); }
 function downloadSyllabusPDF(){
+  const JsPDF=window.jspdf?.jsPDF || window.jsPDF;
+  if(!JsPDF){alert("PDF library load nahi hui. Internet on karke page reload karo.");return;}
+  const d=syllabusData();
+  if(!d.chapters.length){alert("Pehle chapters add karo.");return;}
+
+  // Large syllabuses used to make one very heavy autoTable call. On phones
+  // that could stall jsPDF before the browser got a chance to download it.
+  // Build the PDF in small page-sized chunks instead.
+  const pdf=new JsPDF({orientation:"landscape",unit:"mm",format:"a4",compress:true});
+  const M=7, usable=297-14;
+  const headers=["#","Chapter Name","Lecture Tracker","Total Lec","Lec Comp",...SYLLABUS_TASKS.map(k=>SYLLABUS_TASK_LABELS[k])];
+  const widths=[7,55,60,14,10,...SYLLABUS_TASKS.map(()=>12)];
+
+  let firstPage=true;
+
+  function drawPage(subject, chapters, startIndex){
+    if(!firstPage) pdf.addPage();
+    firstPage=false;
+
+    pdf.setFont("helvetica","bold");
+    pdf.setFontSize(15);
+    pdf.setTextColor(25,25,25);
+    pdf.text("JEE SYLLABUS TRACKER",M,9);
+
+    pdf.setFont("helvetica","normal");
+    pdf.setFontSize(6.5);
+    pdf.text("Offline Printable • Tick everything by hand",M,13);
+
+    pdf.setFont("helvetica","bold");
+    pdf.setFontSize(10.5);
+    pdf.text(subject.toUpperCase(),M,19);
+
+    const rows=chapters.map((c,i)=>[
+      String(startIndex+i+1), c.name, "", String(c.total), "",
+      ...SYLLABUS_TASKS.map(()=> "")
+    ]);
+
+    pdf.autoTable({
+      startY:22,
+      margin:{left:M,right:M,top:6,bottom:7},
+      tableWidth:usable,
+      head:[headers],
+      body:rows,
+      theme:"grid",
+      rowPageBreak:"avoid",
+      styles:{
+        font:"helvetica",fontSize:6.4,cellPadding:1.2,overflow:"linebreak",
+        valign:"middle",halign:"center",lineWidth:0.18,
+        lineColor:[145,145,145],textColor:[30,30,30]
+      },
+      headStyles:{
+        fontStyle:"bold",fontSize:6.2,halign:"center",valign:"middle",
+        fillColor:[235,235,235],textColor:[25,25,25],cellPadding:1.2
+      },
+      columnStyles:Object.fromEntries(
+        widths.map((w,i)=>[
+          i,{cellWidth:w,halign:i===1?"left":"center",
+          fontSize:i===1?10:(i===3?8:6.4),fontStyle:i===1||i===3?"bold":"normal"}
+        ])
+      ),
+      didParseCell:data=>{
+        if(data.section==="body" && data.column.index===2){
+          const total=chapters[data.row.index].total;
+          const lines=Math.ceil(total/5);
+          data.cell.styles.minCellHeight=Math.max(8,lines*7.0+1.5);
+        }
+      },
+      didDrawCell:data=>{
+        if(data.section!=="body")return;
+
+        if(data.column.index===2){
+          const total=chapters[data.row.index].total;
+          const perLine=5, box=4.0, step=11.0, lineH=7.0;
+
+          for(let n=0;n<total;n++){
+            const line=Math.floor(n/perLine), pos=n%perLine;
+            const x=data.cell.x+2.0+pos*step;
+            const y=data.cell.y+1.0+line*lineH;
+            if(y+box>data.cell.y+data.cell.height-0.3)continue;
+
+            pdfBox(pdf,x,y,box);
+            pdf.setFont("helvetica","normal");
+            pdf.setFontSize(5.2);
+            pdf.setTextColor(55,55,55);
+            pdf.text(String(n+1),x+5.2,y+3.0);
+          }
+        }
+
+        if(data.column.index>=5){
+          const box=4.0;
+          pdfBox(
+            pdf,
+            data.cell.x+(data.cell.width-box)/2,
+            data.cell.y+(data.cell.height-box)/2,
+            box
+          );
+        }
+      }
+    });
+  }
+
   try{
-    const JsPDF=window.jspdf?.jsPDF || window.jsPDF;
-    if(!JsPDF){alert("PDF library load nahi hui. Internet on karke page reload karo.");return;}
-    const d=syllabusData();
-    if(!d.chapters.length){alert("Pehle chapters add karo.");return;}
+    // Keep each autoTable call comfortably within one A4 page's worth of rows.
+    // A chapter with up to 100 lectures still fits as a single row.
+    const MAX_BODY_HEIGHT=255;
 
-    const pdf=new JsPDF({orientation:"landscape",unit:"mm",format:"a4",compress:true});
-    const M=7, usable=283;
-    const headers=["#","Chapter Name","Lecture Tracker","Total Lec","Lec Comp",...SYLLABUS_TASKS.map(k=>SYLLABUS_TASK_LABELS[k])];
-    const widths=[7,45,57,9,10,...SYLLABUS_TASKS.map(()=>13)];
-    let firstPage=true;
+    for(const subject of SYLLABUS_SUBJECTS){
+      const chapters=d.chapters.filter(c=>c.subject===subject);
+      if(!chapters.length) continue;
 
-    function addSubject(subject, chapters){
-      if(!chapters.length)return;
-      if(!firstPage)pdf.addPage();
-      firstPage=false;
-      pdf.setFont("helvetica","bold"); pdf.setFontSize(15); pdf.setTextColor(25,25,25);
-      pdf.text("JEE SYLLABUS TRACKER",M,9);
-      pdf.setFont("helvetica","normal"); pdf.setFontSize(6.5);
-      pdf.text("Offline Printable • Tick everything by hand",M,13);
-      pdf.setFont("helvetica","bold"); pdf.setFontSize(10.5);
-      pdf.text(subject.toUpperCase(),M,19);
+      let chunk=[];
+      let used=0;
+      let startIndex=0;
 
-      const rows=chapters.map((c,i)=>[
-        String(i+1),c.name,"",String(c.total),"",...SYLLABUS_TASKS.map(()=>"")
-      ]);
+      chapters.forEach((chapter,index)=>{
+        const h=Math.max(8,Math.ceil(chapter.total/5)*7.0+1.5);
 
-      pdf.autoTable({
-        startY:22,
-        margin:{left:M,right:M,top:6,bottom:7},
-        tableWidth:usable,
-        head:[headers],
-        body:rows,
-        theme:"grid",
-        pageBreak:"auto",
-        rowPageBreak:"avoid",
-        styles:{font:"helvetica",fontSize:5.6,cellPadding:1.0,overflow:"linebreak",valign:"middle",halign:"center",lineWidth:0.18,lineColor:[145,145,145],textColor:[30,30,30]},
-        headStyles:{fontStyle:"bold",fontSize:5.5,halign:"center",valign:"middle",fillColor:[235,235,235],textColor:[25,25,25],cellPadding:1.2},
-        columnStyles:Object.fromEntries(widths.map((w,i)=>[i,{cellWidth:w,halign:i===1?"left":"center",fontSize:i===1?7:5.6,fontStyle:i===1?"bold":"normal"}])),
-        didParseCell:data=>{
-          if(data.section==="body" && data.column.index===2){
-            const total=chapters[data.row.index].total;
-            const lines=Math.ceil(total/5);
-            data.cell.styles.minCellHeight=Math.max(9,Math.min(115,lines*5.6+2));
-          }
-        },
-        didDrawCell:data=>{
-          if(data.section!=="body")return;
-          const chapter=chapters[data.row.index];
-          if(!chapter)return;
-          if(data.column.index===2){
-            const total=chapter.total, perLine=5, box=3.0, step=11.0, lineH=5.6;
-            for(let n=0;n<total;n++){
-              const line=Math.floor(n/perLine), pos=n%perLine;
-              const x=data.cell.x+1.5+pos*step, y=data.cell.y+1.0+line*lineH;
-              if(x+7.5>data.cell.x+data.cell.width || y+box>data.cell.y+data.cell.height-0.2)continue;
-              pdfBox(pdf,x,y,box);
-              pdf.setFont("helvetica","normal"); pdf.setFontSize(3.8); pdf.setTextColor(55,55,55);
-              pdf.text(`L${n+1}`,x+3.6,y+2.3,{align:"center"});
-            }
-          }
-          if(data.column.index>=5){
-            const box=4.0;
-            pdfBox(pdf,data.cell.x+(data.cell.width-box)/2,data.cell.y+(data.cell.height-box)/2,box);
-          }
+        // Flush before adding another large row.
+        if(chunk.length && used+h>MAX_BODY_HEIGHT){
+          drawPage(subject,chunk,startIndex);
+          startIndex=index;
+          chunk=[];
+          used=0;
+        }
+
+        chunk.push(chapter);
+        used+=h;
+
+        if(index===chapters.length-1 && chunk.length){
+          drawPage(subject,chunk,startIndex);
         }
       });
     }
 
-    for(const subject of SYLLABUS_SUBJECTS){
-      const chapters=d.chapters.filter(c=>c.subject===subject);
-      addSubject(subject,chapters);
-    }
     pdf.save("JEE-Syllabus-Tracker-A4-Landscape.pdf");
-  }catch(err){
-    console.error("Syllabus PDF error:",err);
-    alert("PDF banate waqt error aaya. Page reload karke dobara try karo.");
+  }catch(e){
+    console.error("Syllabus PDF generation failed:",e);
+    alert("PDF generate nahi ho paaya. Data safe hai — chapters/lectures delete nahi hue. Page reload karke dobara try karo.");
   }
 }
 
