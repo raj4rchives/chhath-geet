@@ -1,13 +1,15 @@
-CHHATH GEET — RAJ SHARMA
-YouTube-based playlist. No MP3 upload required.
+WEBRENT PANEL
+==============
+A responsive website-rental landing page inspired by the supplied screenshots.
 
-To add a song:
-1. Open script.js.
-2. Find a song object.
-3. Replace REPLACE_ID_X with the YouTube VIDEO ID.
-Example:
-https://www.youtube.com/watch?v=ABC123
-Video ID = ABC123
+Files:
+- index.html
+- style.css
+- script.js
 
-Keep index.html, style.css and script.js in the GitHub Pages root.
-The song plays through YouTube's embedded player on the website.
+Open index.html in a browser. Before production:
+1. Replace WebRent branding with your brand/domain.
+2. Connect the enquiry form to your backend/email/WhatsApp.
+3. Add real authentication for Client Login.
+4. Connect payment gateway and subscription billing.
+5. Add your actual plan limits and legal pages.
