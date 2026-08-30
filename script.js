@@ -1,248 +1,108 @@
 (() => {
 "use strict";
-
-const KEY="jee_syllabus_tracker_v2";
+const KEY="jeetrack_syllabus_theme_v1";
 const COLS=[
- ["number","Number"],["lectures","Lecture Tracker"],["mains","Mains Level"],
- ["advanced","Advanced Level"],["notes","Short Notes"],["dpp","DPP"],
- ["hw","Homework"],["module","Module"],["pyq","PYQ"],["test","Test"],
- ["r1","Revision 1"],["r2","Revision 2"],["r3","Revision 3"]
+["number","Number"],["lectures","Lecture Tracker"],["total","Total Lec"],
+["mains","Mains Level"],["advanced","Advanced Level"],["notes","Short Notes"],
+["dpp","DPP"],["hw","Homework"],["module","Module"],["pyq","PYQ"],["test","Test"],
+["r1","Revision 1"],["r2","Revision 2"],["r3","Revision 3"]
 ];
-
-let state=load();
-
-function load(){
- try{
-  const x=JSON.parse(localStorage.getItem(KEY));
-  if(x) return x;
- }catch(e){}
- return {
-  title:"JEE SYLLABUS TRACKER",
-  subject:"PHYSICS",
-  selected:COLS.map(x=>x[0]),
-  chapters:[]
- };
+let state=JSON.parse(localStorage.getItem(KEY)||"null")||{selected:COLS.map(x=>x[0]),chapters:[]};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+function persist(){localStorage.setItem(KEY,JSON.stringify(state))}
+function toast(x){let t=$("toast");if(!t){t=document.createElement("div");t.id="toast";document.body.appendChild(t)}t.textContent=x;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1500)}
+function columns(){
+ $("columns").innerHTML=COLS.map(([k,n])=>`<label class="col"><input type="checkbox" data-col="${k}" ${state.selected.includes(k)?"checked":""}>${n}</label>`).join("");
+ document.querySelectorAll("[data-col]").forEach(x=>x.onchange=()=>{state.selected=[...document.querySelectorAll("[data-col]:checked")].map(x=>x.dataset.col);persist();preview()});
 }
-
-function esc(s){
- return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+function list(){
+ let out="";
+ ["Physics","Chemistry","Mathematics"].forEach(s=>{
+  let a=state.chapters.filter(c=>c.subject===s);if(!a.length)return;
+  out+=`<div class="subject-card"><h3>${s}</h3><div class="table-wrap"><table class="table"><thead><tr><th>#</th><th>Chapter Name</th><th>Total Lectures</th><th>Action</th></tr></thead><tbody>`;
+  a.forEach((c,i)=>out+=`<tr><td>${i+1}</td><td>${esc(c.name)}</td><td>${c.total}</td><td><button class="delete" data-del="${c.id}">Delete</button></td></tr>`);
+  out+="</tbody></table></div></div>";
+ });
+ $("chapterList").innerHTML=out||'<div class="panel" style="text-align:center;color:#777">No chapters added yet.</div>';
+ document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{state.chapters=state.chapters.filter(c=>c.id!==b.dataset.del);persist();list();preview();stats()});
 }
-
-function renderColumns(){
- document.getElementById("columns").innerHTML=COLS.map(([k,n])=>`
-  <label class="col">
-   <input type="checkbox" data-col="${k}" ${state.selected.includes(k)?"checked":""}>
-   <span>${n}</span>
-  </label>`).join("");
- document.querySelectorAll("[data-col]").forEach(x=>x.onchange=()=>{
-  state.selected=[...document.querySelectorAll("[data-col]:checked")].map(x=>x.dataset.col);
-  renderPreview();
- });
-}
-
-function renderChapters(){
- const box=document.getElementById("chapters");
- if(!state.chapters.length){
-  box.innerHTML='<p class="muted" style="padding:18px 0">No chapters added yet.</p>';
-  return;
- }
- box.innerHTML=state.chapters.map((c,i)=>`
-  <div class="chapter">
-   <div><small>CHAPTER ${i+1}</small>
-    <input data-name="${i}" value="${esc(c.name)}" placeholder="Chapter name">
-   </div>
-   <div><label>Total Lec</label>
-    <input type="number" min="1" max="200" data-lec="${i}" value="${Math.max(1,Number(c.lectures)||1)}">
-   </div>
-   <button class="danger remove" data-remove="${i}">×</button>
-  </div>`).join("");
-
- document.querySelectorAll("[data-name]").forEach(x=>x.oninput=()=>{
-  state.chapters[+x.dataset.name].name=x.value; renderPreview();
- });
- document.querySelectorAll("[data-lec]").forEach(x=>x.oninput=()=>{
-  state.chapters[+x.dataset.lec].lectures=Math.max(1,Math.min(200,+x.value||1)); renderPreview();
- });
- document.querySelectorAll("[data-remove]").forEach(x=>x.onclick=()=>{
-  state.chapters.splice(+x.dataset.remove,1); renderChapters(); renderPreview();
- });
-}
-
-function renderPreview(){
- const selected=COLS.filter(x=>state.selected.includes(x[0]));
- let html="<table><thead><tr><th>Chapter Name</th>";
- selected.forEach(x=>html+=`<th>${x[1]}</th>`);
- html+="</tr></thead><tbody>";
-
+function preview(){
+ let selected=COLS.filter(c=>state.selected.includes(c[0]));
+ let h="<table class='preview-table'><thead><tr><th>Chapter Name</th>"+selected.map(c=>`<th>${c[1]}</th>`).join("")+"</tr></thead><tbody>";
  state.chapters.forEach((c,i)=>{
-  html+=`<tr><td class="chapter-name">${esc(c.name)}</td>`;
+  h+=`<tr><td>${esc(c.name)}</td>`;
   selected.forEach(([k])=>{
-   if(k==="number") html+=`<td>${i+1}</td>`;
-   else if(k==="lectures"){
-    html+="<td style='text-align:left'>";
-    for(let n=1;n<=Math.max(1,+c.lectures||1);n++)
-      html+=`<span class="lecture"><span class="box"></span>Lec ${n}</span>`;
-    html+="</td>";
-   }else html+='<td><span class="box"></span></td>';
-  });
-  html+="</tr>";
+   if(k==="number")h+=`<td>${i+1}</td>`;
+   else if(k==="total")h+=`<td>${c.total}</td>`;
+   else if(k==="lectures"){let s="<td style='text-align:left'>";for(let n=1;n<=c.total;n++)s+=`<span class='lec'><span class='box'></span>Lec ${n}</span>`;h+=s+"</td>"}
+   else h+="<td><span class='box'></span></td>";
+  });h+="</tr>";
  });
- if(!state.chapters.length) html+=`<tr><td colspan="${selected.length+1}">Add chapters to see the preview.</td></tr>`;
- html+="</tbody></table>";
- document.getElementById("preview").innerHTML=html;
+ if(!state.chapters.length)h+=`<tr><td colspan='${selected.length+1}'>Add chapters to preview.</td></tr>`;
+ $("preview").innerHTML=h+"</tbody></table>";
 }
-
-function save(){
- state.title=document.getElementById("title").value.trim()||"JEE SYLLABUS TRACKER";
- state.subject=document.getElementById("subject").value;
- state.selected=[...document.querySelectorAll("[data-col]:checked")].map(x=>x.dataset.col);
- localStorage.setItem(KEY,JSON.stringify(state));
- toast("Tracker saved");
+function stats(){
+ $("chapterStat").textContent=state.chapters.length;
+ $("lectureStat").textContent=state.chapters.reduce((n,c)=>n+c.total,0);
 }
-
-function toast(s){
- const t=document.getElementById("toast"); t.textContent=s; t.classList.add("show");
- setTimeout(()=>t.classList.remove("show"),1600);
-}
-
-document.getElementById("title").value=state.title;
-document.getElementById("subject").value=state.subject;
-renderColumns(); renderChapters(); renderPreview();
-
-document.getElementById("addChapter").onclick=()=>{
- state.chapters.push({name:"",lectures:1}); renderChapters(); renderPreview();
- const a=document.querySelectorAll("[data-name]"); a[a.length-1]?.focus();
+$("add").onclick=()=>{
+ let subject=$("subject").value,name=$("chapter").value.trim(),total=+$("lectures").value;
+ if(!name||!Number.isInteger(total)||total<1){alert("Chapter name और Total Lectures भरो.");return}
+ state.chapters.push({id:"c_"+Date.now()+"_"+Math.random().toString(36).slice(2),subject,name,total});
+ $("chapter").value="";$("lectures").value="";persist();list();preview();stats();$("chapter").focus();
 };
-document.getElementById("save").onclick=save;
-document.getElementById("clear").onclick=()=>{
- if(confirm("Delete all chapters?")){
-  state.chapters=[]; localStorage.setItem(KEY,JSON.stringify(state)); renderChapters(); renderPreview();
- }
-};
-document.getElementById("download").onclick=makePDF;
+$("save").onclick=()=>{persist();toast("Tracker saved")};
+$("clear").onclick=()=>{if(confirm("Clear complete syllabus?")){state.chapters=[];persist();list();preview();stats()}};
+$("allCols").onclick=()=>{state.selected=COLS.map(x=>x[0]);columns();persist();preview()};
+$("chapter").onkeydown=e=>{if(e.key==="Enter")$("add").click()};
+columns();list();preview();stats();
 
-async function getJsPDF(){
- if(window.jspdf?.jsPDF) return window.jspdf.jsPDF;
- await new Promise((resolve,reject)=>{
-  const s=document.createElement("script");
-  s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
-  s.onload=resolve; s.onerror=reject; document.head.appendChild(s);
- });
- return window.jspdf.jsPDF;
-}
-
-async function makePDF(){
- save();
+async function pdf(){
  if(!state.chapters.length){alert("Add at least one chapter.");return}
  if(!state.selected.length){alert("Select at least one column.");return}
-
- try{
-  const JsPDF=await getJsPDF();
-  const doc=new JsPDF({orientation:"landscape",unit:"mm",format:"a4",compress:true});
-  const W=297,H=210,M=8;
-  const selected=COLS.filter(x=>state.selected.includes(x[0]));
-  const cols=[["chapter","Chapter Name"],...selected];
-
-  const base={
-   chapter:48,number:10,lectures:64,mains:17,advanced:20,notes:18,
-   dpp:13,hw:14,module:16,pyq:13,test:13,r1:13,r2:13,r3:13
-  };
-  let widths=cols.map(x=>base[x[0]]||14);
-  let total=widths.reduce((a,b)=>a+b,0);
-
-  if(total>W-2*M){
-   const scale=(W-2*M)/total;
-   widths=widths.map((v,i)=>{
-    const k=cols[i][0], min=k==="chapter"?35:k==="lectures"?45:8.5;
-    return Math.max(min,v*scale);
-   });
-   let over=widths.reduce((a,b)=>a+b,0)-(W-2*M);
-   for(let i=0;i<widths.length&&over>0;i++){
-    if(cols[i][0]==="chapter"||cols[i][0]==="lectures") continue;
-    const cut=Math.min(over,Math.max(0,widths[i]-8.5));
-    widths[i]-=cut; over-=cut;
-   }
-  }
-
-  let y=M;
-
-  function title(){
-   doc.setFont("helvetica","bold");doc.setFontSize(15);
-   doc.text(state.title||"JEE SYLLABUS TRACKER",M,y+5);
-   doc.setFontSize(9);doc.text(state.subject,M,y+11);y+=15;
-  }
-
-  function tableHead(){
-   const hh=16;let x=M;
-   doc.setFont("helvetica","bold");doc.setFontSize(6.5);
-   cols.forEach(([k,n],i)=>{
-    doc.setFillColor(238,239,244);doc.rect(x,y,widths[i],hh,"FD");
-    const lines=doc.splitTextToSize(n,widths[i]-2);
-    doc.text(lines,x+widths[i]/2,y+5,{align:"center"});
-    x+=widths[i];
-   });
-   y+=hh;
-  }
-
-  function page(){
-   doc.addPage();y=M;title();tableHead();
-  }
-
-  title();tableHead();
-
-  state.chapters.forEach((c,idx)=>{
-   const totalL=Math.max(1,Math.min(200,+c.lectures||1));
-   const li=cols.findIndex(x=>x[0]==="lectures");
-   let lectureLines=[];
-   if(li>=0){
-    const font=totalL>30?5.8:totalL>18?6.3:7;
-    doc.setFontSize(font);
-    let line="";
-    for(let n=1;n<=totalL;n++){
-     const item=`□ Lec ${n}`;
-     const test=line?line+"   "+item:item;
-     if(doc.getTextWidth(test)>widths[li]-3){lectureLines.push(line);line=item}
-     else line=test;
-    }
-    if(line)lectureLines.push(line);
-   }
-   const rowH=Math.max(17,li>=0?7+lectureLines.length*4.5:17);
-   if(y+rowH>H-10) page();
-
+ const JsPDF=window.jspdf?.jsPDF;if(!JsPDF){alert("PDF library load नहीं हुई.");return}
+ const doc=new JsPDF({orientation:"landscape",unit:"mm",format:"a4",compress:true});
+ const W=297,H=210,M=7;
+ const cols=[["chapter","Chapter Name"],...COLS.filter(c=>state.selected.includes(c[0]))];
+ const base={chapter:43,number:9,lectures:68,total:13,mains:16,advanced:18,notes:18,dpp:12,hw:12,module:15,pyq:12,test:12,r1:12,r2:12,r3:12};
+ let widths=cols.map(c=>base[c[0]]||13), max=W-2*M, sum=widths.reduce((a,b)=>a+b,0);
+ if(sum>max){let sc=max/sum;widths=widths.map(w=>w*sc)}
+ let y=M;
+ function header(subject){
+  doc.setFont("helvetica","bold");doc.setFontSize(15);doc.text("JEE SYLLABUS TRACKER",M,y+5);
+  doc.setFontSize(9);doc.text(subject.toUpperCase(),M,y+11);y+=15;
+  let x=M;doc.setFontSize(6.3);
+  cols.forEach(([k,n],i)=>{doc.setFillColor(238,239,244);doc.rect(x,y,widths[i],16,"FD");doc.text(doc.splitTextToSize(n,widths[i]-2),x+widths[i]/2,y+5,{align:"center"});x+=widths[i]});y+=16;
+ }
+ function newPage(subject){doc.addPage();y=M;header(subject)}
+ function rows(chapters,start){
+  for(let r=0;r<chapters.length;r++){
+   let c=chapters[r],li=cols.findIndex(x=>x[0]==="lectures"), lines=Math.ceil(c.total/5),rh=Math.max(17,lines*7+2);
+   if(y+rh>H-10)newPage(c.subject);
    let x=M;
    cols.forEach(([k],i)=>{
-    doc.setFillColor(255,255,255);doc.rect(x,y,widths[i],rowH,"S");
-    if(k==="chapter"){
-     doc.setFont("helvetica","bold");doc.setFontSize(8.2);
-     const lines=doc.splitTextToSize(c.name||`Chapter ${idx+1}`,widths[i]-4);
-     doc.text(lines,x+2,y+rowH/2-(lines.length-1)*2);
-    }else if(k==="number"){
-     doc.setFont("helvetica","normal");doc.setFontSize(8);
-     doc.text(String(idx+1),x+widths[i]/2,y+rowH/2+2.5,{align:"center"});
-    }else if(k==="lectures"){
-     doc.setFont("helvetica","normal");doc.setFontSize(totalL>30?5.8:totalL>18?6.3:7);
-     lectureLines.forEach((line,j)=>doc.text(line,x+2,y+5+j*4.5));
-    }else{
-     const b=Math.min(5.5,widths[i]-4,rowH-6);
-     doc.rect(x+(widths[i]-b)/2,y+(rowH-b)/2,b,b);
-    }
+    doc.setFillColor(255,255,255);doc.rect(x,y,widths[i],rh,"S");
+    if(k==="chapter"){doc.setFont("helvetica","bold");doc.setFontSize(8.5);doc.text(doc.splitTextToSize(c.name,widths[i]-4),x+2,y+rh/2)}
+    else if(k==="number"){doc.setFontSize(8);doc.text(String(start+r+1),x+widths[i]/2,y+rh/2+2,{align:"center"})}
+    else if(k==="total"){doc.setFontSize(8);doc.text(String(c.total),x+widths[i]/2,y+rh/2+2,{align:"center"})}
+    else if(k==="lectures"){
+      doc.setFont("helvetica","normal");doc.setFontSize(c.total>30?5.2:6);
+      let step=Math.min(13,(widths[i]-3)/5),b=4;
+      for(let n=0;n<c.total;n++){let row=Math.floor(n/5),pos=n%5,xx=x+1.5+pos*step,yy=y+1+row*7;doc.rect(xx,yy,b,b);doc.text("Lec "+(n+1),xx+4.7,yy+3)}
+    }else{let b=4.8;doc.rect(x+(widths[i]-b)/2,y+(rh-b)/2,b,b)}
     x+=widths[i];
-   });
-   y+=rowH;
-  });
-
-  const pages=doc.getNumberOfPages();
-  for(let p=1;p<=pages;p++){
-   doc.setPage(p);doc.setFont("helvetica","normal");doc.setFontSize(6.5);
-   doc.text(`JEE Syllabus Tracker • ${state.subject} • Page ${p}/${pages}`,W-M,H-4,{align:"right"});
+   });y+=rh;
   }
-
-  const name=(state.subject||"JEE").replace(/[^a-z0-9]+/gi,"_");
-  doc.save(`${name}_Syllabus_Tracker.pdf`);
-  toast("PDF downloaded");
- }catch(e){
-  console.error(e);
-  alert("PDF library load नहीं हो पाई. Internet on करके फिर try करो.");
  }
+ let first=true;
+ ["Physics","Chemistry","Mathematics"].forEach(subject=>{
+  let a=state.chapters.filter(c=>c.subject===subject);if(!a.length)return;
+  if(!first)newPage(subject);else{header(subject);first=false}
+  rows(a,0);
+ });
+ for(let p=1;p<=doc.getNumberOfPages();p++){doc.setPage(p);doc.setFontSize(6.5);doc.text(`JEETrack • Page ${p}/${doc.getNumberOfPages()}`,W-M,H-4,{align:"right"})}
+ doc.save("JEETrack-Syllabus-A4.pdf");toast("PDF downloaded");
 }
+$("pdf").onclick=pdf;
 })();

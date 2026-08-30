@@ -7,59 +7,75 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
-  <header>
-    <h1>JEE Syllabus Tracker</h1>
-    <p>Create a clean, printable A4 syllabus tracker PDF.</p>
-  </header>
+<header class="nav">
+  <div class="brand"><span class="brand-mark">J</span><span>JEE<span>Track</span></span></div>
+  <button class="nav-btn" onclick="document.getElementById('builder').scrollIntoView({behavior:'smooth'})">Build tracker →</button>
+</header>
 
-  <section class="card">
-    <div class="grid">
-      <div>
-        <label>PDF Title</label>
-        <input id="title" value="JEE SYLLABUS TRACKER">
-      </div>
-      <div>
-        <label>Subject</label>
-        <select id="subject">
-          <option>PHYSICS</option>
-          <option>CHEMISTRY</option>
-          <option>MATHEMATICS</option>
-        </select>
-      </div>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>PDF Columns</h2>
-    <p class="muted">Select only the columns you want.</p>
-    <div id="columns" class="columns"></div>
-  </section>
-
-  <section class="card">
-    <div class="section-title">
-      <div>
-        <h2>Chapters</h2>
-        <p class="muted">Enter chapter name and total lectures.</p>
-      </div>
-      <button id="addChapter" class="primary">+ Add Chapter</button>
-    </div>
-    <div id="chapters"></div>
-  </section>
-
-  <section class="card">
-    <h2>Preview</h2>
-    <div id="preview" class="preview"></div>
-  </section>
-
-  <div class="actions">
-    <button id="save" class="secondary">Save Tracker</button>
-    <button id="download" class="primary">Download PDF</button>
-    <button id="clear" class="danger">Clear All</button>
+<main>
+<section class="hero">
+  <div class="eyebrow">JEE SYLLABUS TRACKER</div>
+  <h1>Plan every lecture.<br><em>Track every chapter.</em><br>Stay ahead.</h1>
+  <p>Create a clean printable syllabus tracker. Choose your chapters, lecture count and tracking columns, then download an A4 PDF made for pen-and-paper ticking.</p>
+  <div class="hero-actions">
+    <button class="main-btn" onclick="document.getElementById('builder').scrollIntoView({behavior:'smooth'})">Create your tracker →</button>
+    <button class="light-btn" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</button>
   </div>
-</div>
+  <div class="stats">
+    <div><b id="chapterStat">0</b><span>chapters added</span></div>
+    <div><b id="lectureStat">0</b><span>total lectures</span></div>
+    <div><b>A4</b><span>print-ready PDF</span></div>
+  </div>
+</section>
 
-<div id="toast"></div>
+<section id="builder" class="builder section">
+  <div class="section-kicker">01 — BUILD IT</div>
+  <h2>Your syllabus, your way.</h2>
+  <p class="section-sub">Add chapters and decide exactly which columns appear on your printable tracker.</p>
+
+  <div class="panel">
+    <div class="form-grid">
+      <div><label>Subject</label><select id="subject"><option>Physics</option><option>Chemistry</option><option>Mathematics</option></select></div>
+      <div class="wide"><label>Chapter name</label><input id="chapter" placeholder="e.g. Laws of Motion"></div>
+      <div><label>Total lectures</label><input id="lectures" type="number" min="1" max="100" placeholder="13"></div>
+      <button class="main-btn add" id="add">+ Add chapter</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title"><div><h3>PDF columns</h3><p>Select the boxes you want in your PDF.</p></div><button class="tiny" id="allCols">Select all</button></div>
+    <div class="columns" id="columns"></div>
+  </div>
+
+  <div id="chapterList"></div>
+
+  <div class="download-row">
+    <button class="save-btn" id="save">Save tracker</button>
+    <button class="main-btn" id="pdf">Download A4 PDF →</button>
+    <button class="clear-btn" id="clear">Clear all</button>
+  </div>
+</section>
+
+<section class="preview section">
+  <div class="section-kicker">02 — PREVIEW</div>
+  <h2>See it before you print.</h2>
+  <p class="section-sub">The PDF keeps the lecture labels and square tick boxes large and readable.</p>
+  <div class="preview-box" id="preview"></div>
+</section>
+
+<section id="how" class="how section">
+  <div class="section-kicker">03 — HOW IT WORKS</div>
+  <h2>Simple from start to print.</h2>
+  <div class="steps">
+    <div><b>01</b><h3>Add chapters</h3><p>Choose a subject, enter a chapter and its total lecture count.</p></div>
+    <div><b>02</b><h3>Choose columns</h3><p>Keep Mains, Advanced, DPP, HW, PYQ, revisions and anything else you need.</p></div>
+    <div><b>03</b><h3>Download & tick</h3><p>Download an A4 landscape PDF and use the square boxes with a pen.</p></div>
+  </div>
+</section>
+</main>
+
+<footer>JEETrack • Offline-friendly syllabus planning</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
