@@ -1,94 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Backlog Tracker</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JEE Syllabus Tracker</title>
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+<style>
+:root{--bg:#f7f6ff;--card:#fff;--text:#17172b;--muted:#777791;--purple:#6d5ce7;--purple2:#8577f4;--line:#e8e6f2;--green:#28a36a}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+header{height:74px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 6%;position:sticky;top:0;z-index:5}
+.logo{font-size:24px;font-weight:800;letter-spacing:-1px}.logo span{color:var(--purple)}
+.menu{border:1px solid var(--line);background:#fff;border-radius:16px;padding:11px 14px;font-size:22px}
+.hero{padding:62px 6% 36px;background:linear-gradient(135deg,#faf9ff,#f0eeff)}
+.eyebrow{color:var(--purple);font-size:12px;font-weight:800;letter-spacing:2px}.hero h1{font-size:clamp(38px,7vw,72px);line-height:.98;max-width:850px;margin:18px 0}.hero h1 span{color:var(--purple)}.hero p{color:var(--muted);font-size:17px;max-width:680px;line-height:1.7}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{border:0;border-radius:14px;padding:15px 20px;font-weight:800;font-size:15px;cursor:pointer}.primary{background:var(--purple);color:#fff}.secondary{background:#fff;color:var(--text);border:1px solid var(--line)}
+.wrap{max-width:1180px;margin:auto;padding:26px 6% 70px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:10px 0 26px}.stat,.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 28px rgba(50,40,100,.05)}.stat{padding:20px}.stat b{font-size:29px}.stat small{display:block;color:var(--muted);margin-top:5px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.filter{padding:11px 13px;border:1px solid var(--line);background:#fff;border-radius:12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{padding:20px}.card h3{margin:0 0 8px}.sub{color:var(--muted);font-size:13px}.bar{height:9px;background:#eeeefa;border-radius:99px;overflow:hidden;margin:15px 0}.fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--purple2));border-radius:99px}.chapter{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid #f0eff6}.chapter input{accent-color:var(--purple);width:18px;height:18px;margin-top:2px}.done{text-decoration:line-through;color:#9b99aa}.pct{float:right;font-weight:800;color:var(--purple)}
+footer{text-align:center;color:var(--muted);padding:30px}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.hero{padding-top:42px}}
+</style>
 </head>
 <body>
-  <div class="bg-orb orb-1"></div><div class="bg-orb orb-2"></div>
+<header><div class="logo">JEE<span>Track</span></div><button class="menu" onclick="scrollTo({top:0,behavior:'smooth'})">☰</button></header>
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo"><span></span><span></span><span></span></div>
-      <div>Backlog<span>Tracker</span></div>
-    </div>
-    <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
-  </header>
+<section class="hero">
+  <div class="eyebrow">THE SMART WAY TO PREPARE FOR JEE</div>
+  <h1>Track your syllabus.<br><span>Own your preparation.</span></h1>
+  <p>JEE Main + Advanced syllabus tracker with chapter-wise progress, automatic saving and a clean printable PDF report.</p>
+  <div class="actions">
+    <button class="btn primary" onclick="downloadPDF()">Download Progress PDF →</button>
+    <button class="btn secondary" onclick="resetAll()">Reset tracker</button>
+  </div>
+</section>
 
-  <aside class="side-menu" id="sideMenu">
-    <button id="closeMenu" class="close-btn">×</button>
-    <h3>BACKLOG TRACKER</h3>
-    <button class="menu-item" id="importBtn">↑ Import Data</button>
-    <button class="menu-item" id="exportBtn">↓ Export Backup</button>
-    <button class="menu-item" id="clearBtn">🗑 Clear All Data</button>
-    <input type="file" id="importFile" accept=".json,application/json" hidden>
-    <p>Data is saved automatically on this device.</p>
-  </aside>
-  <div class="overlay" id="overlay"></div>
+<main class="wrap">
+  <section class="stats">
+    <div class="stat"><b id="overall">0%</b><small>Overall completed</small></div>
+    <div class="stat"><b id="done">0</b><small>Chapters completed</small></div>
+    <div class="stat"><b id="total">0</b><small>Total chapters</small></div>
+    <div class="stat"><b id="remaining">0</b><small>Chapters remaining</small></div>
+  </section>
 
-  <main>
-    <section class="hero">
-      <div class="eyebrow">✦ STUDY SMART. STAY CONSISTENT.</div>
-      <h1>Clear your backlog.<br><span>Make it yours.</span><br>Finish it.</h1>
-      <p>Organize your subjects and chapters, save your progress, and create a clean printable PDF tracker.</p>
-      <div class="hero-actions">
-        <button class="primary" id="scrollAdd">Add chapter <b>→</b></button>
-        <button class="secondary" id="pdfBtn">Download PDF</button>
-      </div>
-    </section>
+  <div class="toolbar">
+    <select id="exam" class="filter" onchange="render()"><option value="all">All Exams</option><option>JEE Main</option><option>JEE Advanced</option></select>
+    <select id="subject" class="filter" onchange="render()"><option value="all">All Subjects</option><option>Physics</option><option>Chemistry</option><option>Mathematics</option></select>
+  </div>
 
-    <section class="stats">
-      <div class="stat"><strong id="subjectCount">0</strong><span>Subjects</span></div>
-      <div class="stat"><strong id="chapterCount">0</strong><span>Chapters</span></div>
-      <div class="stat"><strong id="lectureCount">0</strong><span>Total lectures</span></div>
-      <div class="stat"><strong id="pendingCount">0</strong><span>Pending lectures</span></div>
-    </section>
+  <section id="grid" class="grid"></section>
+</main>
+<footer>JEETrack • Your progress is saved automatically in this browser.</footer>
 
-    <section class="panel add-panel" id="addSection">
-      <div class="section-title"><div><span class="eyebrow">CREATE TRACKER</span><h2>Add a backlog chapter</h2></div></div>
-      <form id="chapterForm">
-        <div class="form-grid">
-          <label>Subject
-            <input id="subject" placeholder="e.g. Physics" required maxlength="40">
-          </label>
-          <label>Chapter
-            <input id="chapter" placeholder="e.g. Current Electricity" required maxlength="70">
-          </label>
-          <label>Total Lectures
-            <input id="lectures" type="number" min="1" max="200" placeholder="e.g. 12" required>
-          </label>
-        </div>
-        <button class="primary add-btn" type="submit">+ Add to backlog</button>
-      </form>
-    </section>
-
-    <section class="tracker-section">
-      <div class="section-title">
-        <div><span class="eyebrow">YOUR PLAN</span><h2>Backlog overview</h2></div>
-        <div class="progress-badge"><span id="doneCount">0</span> completed</div>
-      </div>
-      <div id="trackerList" class="tracker-list"></div>
-      <div id="emptyState" class="empty-state">
-        <div class="empty-icon">☷</div>
-        <h3>No backlog added yet</h3>
-        <p>Add your first subject and chapter to start tracking.</p>
-      </div>
-    </section>
-
-    <section class="download-card">
-      <div>
-        <span class="eyebrow">PRINTABLE TRACKER</span>
-        <h2>Ready for your study sheet?</h2>
-        <p>Download a clean A4 PDF with numbered checkboxes. Print it and tick each lecture as you finish.</p>
-      </div>
-      <button class="primary" id="pdfBtn2">Download PDF →</button>
-    </section>
-  </main>
-
-  <div id="toast"></div>
-  <script src="script.js"></script>
+<script>
+const syllabus={
+Physics:{
+main:["Units & Measurements","Kinematics","Laws of Motion","Work, Energy & Power","Rotational Motion","Gravitation","Properties of Solids & Liquids","Thermodynamics","Kinetic Theory","Oscillations & Waves","Electrostatics","Current Electricity","Magnetic Effects of Current","Electromagnetic Induction","Optics","Dual Nature","Atoms & Nuclei","Electronic Devices"],
+advanced:["Experimental Physics","Center of Mass & Collisions","Rigid Body Dynamics","Fluid Mechanics","Heat & Thermodynamics","Electrostatics","Current Electricity","Magnetism","EMI & AC","Ray & Wave Optics","Modern Physics"]
+},
+Chemistry:{
+main:["Some Basic Concepts","Atomic Structure","Chemical Bonding","Thermodynamics","Equilibrium","Redox Reactions","Periodic Table","P-Block","D- & F-Block","Coordination Compounds","Organic Basics","Hydrocarbons","Haloalkanes","Alcohols & Ethers","Aldehydes & Ketones","Amines","Biomolecules","Polymers","Chemistry in Everyday Life"],
+advanced:["Mole Concept & Stoichiometry","Atomic Structure","Chemical Bonding","Thermodynamics","Ionic Equilibrium","Electrochemistry","Chemical Kinetics","Coordination Chemistry","Advanced Organic Mechanisms","Stereochemistry","Carbonyl Compounds","Amines & Diazonium","Qualitative Analysis"]
+},
+Mathematics:{
+main:["Sets, Relations & Functions","Complex Numbers","Quadratic Equations","Sequences & Series","Permutations & Combinations","Binomial Theorem","Limits & Continuity","Differentiation","Integral Calculus","Differential Equations","Coordinate Geometry","Straight Lines & Circles","Conic Sections","Vectors","3D Geometry","Matrices & Determinants","Probability","Statistics","Trigonometry"],
+advanced:["Complex Numbers","Algebra & Inequalities","Sequences & Series","Advanced P&C","Limits & Continuity","Differential Calculus","Integral Calculus","Differential Equations","Coordinate Geometry","Vector & 3D","Probability & Combinatorics"]
+}};
+let state=JSON.parse(localStorage.getItem("jeetrack")||"{}");
+function key(s,e,c){return s+"|"+e+"|"+c}
+function data(){
+ let arr=[]; for(const s in syllabus){ for(const e of ["main","advanced"]){ for(const c of syllabus[s][e]) arr.push({s,e:e==="main"?"JEE Main":"JEE Advanced",c});}}
+ return arr;
+}
+function render(){
+ const ex=document.getElementById("exam").value, sub=document.getElementById("subject").value;
+ const grouped={};
+ data().filter(x=>(ex==="all"||x.e===ex)&&(sub==="all"||x.s===sub)).forEach(x=>(grouped[x.s+"|"+x.e]??=[]).push(x));
+ let html="";
+ for(const [g,items] of Object.entries(grouped)){
+   const [s,e]=g, done=items.filter(x=>state[key(s,e,x.c)]).length, p=Math.round(done/items.length*100);
+   html+=`<article class="card"><h3>${s} <span class="pct">${p}%</span></h3><div class="sub">${e} • ${done}/${items.length} chapters</div><div class="bar"><div class="fill" style="width:${p}%"></div></div>`;
+   items.forEach(x=>{let k=key(x.s,x.e,x.c);html+=`<label class="chapter"><input type="checkbox" ${state[k]?"checked":""} onchange="toggle('${k.replaceAll("'","\\'")}')"><span class="${state[k]?"done":""}">${x.c}</span></label>`});
+   html+="</article>";
+ }
+ document.getElementById("grid").innerHTML=html||"<div class='card'>No chapters found.</div>";
+ updateStats();
+}
+function toggle(k){state[k]=!state[k];localStorage.setItem("jeetrack",JSON.stringify(state));render()}
+function updateStats(){let all=data(),d=all.filter(x=>state[key(x.s,x.e,x.c)]).length;document.getElementById("overall").textContent=Math.round(d/all.length*100)+"%";document.getElementById("done").textContent=d;document.getElementById("total").textContent=all.length;document.getElementById("remaining").textContent=all.length-d}
+function resetAll(){if(confirm("Reset all chapter progress?")){state={};localStorage.removeItem("jeetrack");render()}}
+function downloadPDF(){
+ const {jsPDF}=window.jspdf, doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+ const all=data(),d=all.filter(x=>state[key(x.s,x.e,x.c)]).length,p=Math.round(d/all.length*100);
+ doc.setFontSize(22);doc.text("JEE Syllabus Progress Report",15,18);
+ doc.setFontSize(11);doc.text("Generated: "+new Date().toLocaleString(),15,26);
+ doc.text(`Overall: ${p}%   |   Completed: ${d}/${all.length}`,15,34);
+ let y=45;
+ ["Physics","Chemistry","Mathematics"].forEach(s=>{
+   doc.setFontSize(15);doc.text(s,15,y);y+=7;
+   ["JEE Main","JEE Advanced"].forEach(e=>{
+     let items=all.filter(x=>x.s===s&&x.e===e), dd=items.filter(x=>state[key(x.s,e,x.c)]).length;
+     doc.setFontSize(10);doc.text(`${e}: ${dd}/${items.length} completed`,18,y);y+=6;
+     items.forEach(x=>{if(y>282){doc.addPage();y=18} doc.setFontSize(8.5);doc.text((state[key(x.s,e,x.c)]?"✓ ":"○ ")+x.c,22,y);y+=4.5});
+     y+=3;
+   }); y+=2;
+ });
+ doc.save("JEE-Syllabus-Progress.pdf");
+}
+render();
+</script>
 </body>
 </html>
