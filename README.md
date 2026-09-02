@@ -1,27 +1,15 @@
-# Webnest Premium Website
+# 370R JEE Advanced Tracker V5
 
-Static premium responsive frontend for a website marketplace + developer marketplace.
+Features:
+- Unlimited daily study log
+- Physics/Chemistry/Maths HW + Class Illustration combined in one column
+- Subject-wise DPP and PYQ tracking
+- Overall and subject dashboard
+- Automatic calendar-month phases (Phase 1, Phase 2, ...)
+- Monthly PDF report
+- JSON export/import backup
+- Editable JEE Advanced target date + live days-left countdown
 
-Files:
-- index.html
-- style.css
-- script.js
+Note: the default countdown date is 23 May 2027 as an editable planning date. JEE Advanced 2027 official date was not found on the official JEE Advanced site in this build; change the date when officially announced.
 
-Open index.html in a browser. No build step is required.
-
-Demo interactions:
-- Mobile navigation
-- Website category filters + search
-- Project brief modal
-- FAQ accordion
-- Demo toast actions
-
-Suggested backend integrations:
-- Authentication
-- Website/product database
-- Developer profiles
-- Real-time chat
-- Quotes/proposals
-- Milestone payments
-- Project dashboard
-- Reviews
+GitHub Pages: upload all files to repository root.
